@@ -7,6 +7,7 @@ import { AppLayout } from './layout';
 import { Habits } from './components/Habits';
 import { HabitsPage } from './pages/HabitsPage';
 import { HabitsIndex } from './components/HabitsIndex';
+import { ObjectivesPage } from './pages/ObjectivesPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route index element={<HabitsIndex />} />
           <Route path=":habitId" element={<Habits />} />
         </Route>
+        <Route path="/objectives" element={<ObjectivesPage />} />
       </Route>
     </Routes>
   );

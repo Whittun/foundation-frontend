@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import s from './AppMenu.module.css';
-import { CalendarDays, ChartNoAxesColumnIncreasing } from 'lucide-react';
+import { CalendarDays, ChartNoAxesColumnIncreasing, Flag, Map } from 'lucide-react';
 import clsx from 'clsx';
 
 export const AppMenu = () => {
@@ -24,6 +24,15 @@ export const AppMenu = () => {
           >
             <ChartNoAxesColumnIncreasing className={s.icon} />
             Habits Tracker
+          </NavLink>
+        </li>
+        <li className={s.linksItem}>
+          <NavLink
+            className={({ isActive }) => clsx(s.link, isActive && s.activeLink)}
+            to="/objectives"
+          >
+            <Map className={s.icon} />
+            Objectives
           </NavLink>
         </li>
       </ul>
