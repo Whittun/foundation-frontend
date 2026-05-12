@@ -20,6 +20,7 @@ const initialNodes = [
   { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Node 1' }, type: 'objective' },
   { id: 'n2', position: { x: 0, y: 100 }, data: { label: 'Node 2' }, type: 'objective' },
 ];
+
 const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
 
 const nodeTypes = {
@@ -85,6 +86,8 @@ export const Objectives = () => {
           nodeOrigin={[0.5, 0.5]}
           deleteKeyCode={['Delete', 'Backspace']}
           nodeTypes={nodeTypes}
+          snapToGrid={true}
+          snapGrid={[20, 20]}
         >
           <Background color="#000000" variant={BackgroundVariant.Dots} />
           <MiniMap />
