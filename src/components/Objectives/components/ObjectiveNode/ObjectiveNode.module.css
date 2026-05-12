@@ -1,0 +1,12 @@
+.root {
+  width: 200px;
+  height: 100px;
+  padding: 10px;
+
+  background-color: antiquewhite;
+  border-radius: 8px;
+}
+
+.selected {
+  outline: 2px solid salmon;
+}

@@ -1,81 +1,10 @@
-import React from 'react';
-import {
-  ReactFlow,
-  applyNodeChanges,
-  Background,
-  BackgroundVariant,
-  applyEdgeChanges,
-  addEdge,
-  MiniMap,
-  Controls,
-  useReactFlow,
-} from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
-
-import s from './ObjectivesPage.module.css';
-import clsx from 'clsx';
-
-const initialNodes = [
-  { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Node 1' } },
-  { id: 'n2', position: { x: 0, y: 100 }, data: { label: 'Node 2' } },
-];
-const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
+import { ReactFlowProvider } from '@xyflow/react';
+import { Objectives } from '../../components/Objectives';
 
 export const ObjectivesPage = () => {
-  const [nodes, setNodes] = React.useState(initialNodes);
-  const [edges, setEdges] = React.useState(initialEdges);
-  const [isCreateMode, setIsCreateMode] = React.useState(false);
-
-  // const { screenToFlowPosition } = useReactFlow();
-
-  const onNodesChange = React.useCallback(
-    (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-    [],
-  );
-  const onEdgesChange = React.useCallback(
-    (changes) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    [],
-  );
-  const onConnect = React.useCallback(
-    (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
-    [],
-  );
-
-  const handlePaneClick = (event: React.MouseEvent) => {
-    if (isCreateMode) {
-      // console.log(screenToFlowPosition({ x: event.clientX, y: event.clientY }));
-    }
-
-    setIsCreateMode(false);
-  };
-
-  const handleCreateNode = () => {
-    setIsCreateMode(true);
-  };
-
   return (
-    <div className={s.root}>
-      <button onClick={handleCreateNode} className={s.addNode}>
-        {'add node'}
-      </button>
-      <div
-        className={clsx(s.flowWrapper, { [s.createMode]: isCreateMode })}
-        style={{ width: '100%', height: '600px' }}
-      >
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onPaneClick={(event) => handlePaneClick(event)}
-          fitView
-        >
-          <Background color="#000000" variant={BackgroundVariant.Dots} />
-          <MiniMap />
-          <Controls />
-        </ReactFlow>
-      </div>
-    </div>
+    <ReactFlowProvider>
+      <Objectives />
+    </ReactFlowProvider>
   );
 };

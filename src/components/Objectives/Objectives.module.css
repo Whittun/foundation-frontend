@@ -1,0 +1,7 @@
+.addNode {
+  margin-bottom: 20px;
+}
+
+.createMode :global(.react-flow__pane) {
+  cursor: cell;
+}
