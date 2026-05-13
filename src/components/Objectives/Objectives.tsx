@@ -17,8 +17,18 @@ import clsx from 'clsx';
 import { ObjectiveNode } from './components/ObjectiveNode';
 
 const initialNodes = [
-  { id: 'n1', position: { x: 0, y: 0 }, data: { label: 'Node 1' }, type: 'objective' },
-  { id: 'n2', position: { x: 0, y: 100 }, data: { label: 'Node 2' }, type: 'objective' },
+  {
+    id: 'n1',
+    position: { x: 0, y: 0 },
+    data: { label: 'Node 1', completed: false },
+    type: 'objective',
+  },
+  {
+    id: 'n2',
+    position: { x: 0, y: 100 },
+    data: { label: 'Node 2', completed: false },
+    type: 'objective',
+  },
 ];
 
 const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
@@ -52,7 +62,7 @@ export const Objectives = () => {
       const newNode = {
         id: Date.now().toString(),
         position: screenToFlowPosition({ x: event.clientX, y: event.clientY }),
-        data: { label: 'New node' },
+        data: { label: 'New node', completed: false },
         type: 'objective',
       };
 

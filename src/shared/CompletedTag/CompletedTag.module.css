@@ -1,0 +1,21 @@
+.completedText {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+
+  font-size: 14px;
+
+  border-radius: 15px;
+}
+
+.completedTextCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+
+  background-color: var(--rating-5);
+  border-radius: 50%;
+}

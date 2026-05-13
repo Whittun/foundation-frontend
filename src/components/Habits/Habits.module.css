@@ -37,30 +37,6 @@
   font-size: 14px;
 }
 
-.completedText {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  height: 100%;
-  padding: 5px 10px;
-
-  font-size: 14px;
-
-  border-radius: 15px;
-  background-color: var(--accent-theme-color);
-}
-
-.completedTextCircle {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 15px;
-  height: 15px;
-
-  background-color: var(--rating-5);
-  border-radius: 50%;
-}
-
 .checkIcon {
   display: flex;
   width: 10px;
@@ -185,4 +161,10 @@
   height: 100%;
 
   color: #ffffff;
+}
+
+.comletedTag {
+  height: 100%;
+
+  background-color: var(--accent-theme-color);
 }

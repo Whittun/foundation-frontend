@@ -3,9 +3,12 @@ import s from './ObjectiveNode.module.css';
 
 import clsx from 'clsx';
 import React from 'react';
+import { Check, CornerDownLeft } from 'lucide-react';
+import { CompletedTag } from '../../../../shared/CompletedTag';
 
 type ObjectiveNodeData = {
   label: string;
+  completed: true;
 };
 
 type ObjectiveNodeProps = NodeProps<Node<ObjectiveNodeData>>;
@@ -43,8 +46,18 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
     }
   };
 
+  const completeButtonHandler = () => {
+    updateNodeData(id, { completed: !data.completed });
+  };
+
   return (
-    <div className={clsx(s.root, { [s.selected]: selected })}>
+    <div className={clsx(s.root, { [s.selected]: selected, [s.completed]: data.completed })}>
+      {selected && (
+        <button onClick={completeButtonHandler} className={clsx(s.comleteButton, 'nodrag')}>
+          {data.completed ? <CornerDownLeft /> : <Check />}
+        </button>
+      )}
+
       <Handle type="target" position={Position.Top} />
       <Handle type="source" position={Position.Bottom} />
 
@@ -57,9 +70,16 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
           onBlur={blurHandler}
         />
       ) : (
-        <p className={clsx(s.label)} onDoubleClick={doubleClickHandle}>
-          {data.label}
-        </p>
+        <React.Fragment>
+          <p
+            className={clsx(s.label, { [s.disabledLabel]: data.completed })}
+            onDoubleClick={doubleClickHandle}
+          >
+            {data.label}
+          </p>
+
+          {data.completed && <CompletedTag className={s.completedTag} />}
+        </React.Fragment>
       )}
     </div>
   );

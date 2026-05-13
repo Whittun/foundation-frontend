@@ -11,6 +11,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import type { UpdateHabitLevelArgs } from '../../types/habitsTypes';
 import { HabitLevelForm } from './components/HabitLevelForm';
+import { CompletedTag } from '../../shared/CompletedTag';
 
 export type DraftInputsValues = {
   levelValue: undefined | number;
@@ -163,14 +164,7 @@ export const Habits = () => {
                         <Trash className={s.controlButtonIcon} />
                       </button>
                     </div>
-                    {isCompleted && (
-                      <div className={s.completedText}>
-                        <div className={s.completedTextCircle}>
-                          <Check className={s.checkIcon} />
-                        </div>
-                        Completed
-                      </div>
-                    )}
+                    {isCompleted && <CompletedTag className={s.comletedTag} />}
                   </div>
                   <p className={s.description}>{habitLevel.description}</p>
                   <div className={s.progressCircles}>
