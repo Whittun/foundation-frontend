@@ -9,6 +9,7 @@ import {
   MiniMap,
   Controls,
   useReactFlow,
+  type XYPosition,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -16,18 +17,28 @@ import s from './Objectives.module.css';
 import clsx from 'clsx';
 import { ObjectiveNode } from './components/ObjectiveNode';
 
-const initialNodes = [
+type Node = {
+  id: string;
+  position: { x: number; y: number };
+  data: { label: string; completed: boolean };
+  type: string;
+  selected: boolean;
+};
+
+const initialNodes: Node[] = [
   {
     id: 'n1',
     position: { x: 0, y: 0 },
     data: { label: 'Node 1', completed: false },
     type: 'objective',
+    selected: false,
   },
   {
     id: 'n2',
     position: { x: 0, y: 100 },
     data: { label: 'Node 2', completed: false },
     type: 'objective',
+    selected: false,
   },
 ];
 
@@ -41,6 +52,9 @@ export const Objectives = () => {
   const [nodes, setNodes] = React.useState(initialNodes);
   const [edges, setEdges] = React.useState(initialEdges);
   const [isCreateMode, setIsCreateMode] = React.useState(false);
+  const [clipboardNodes, setClipboardNodes] = React.useState<Node[]>();
+
+  const mousePositionRef = React.useRef<XYPosition | null>(null);
 
   const { screenToFlowPosition } = useReactFlow();
 
@@ -64,6 +78,7 @@ export const Objectives = () => {
         position: screenToFlowPosition({ x: event.clientX, y: event.clientY }),
         data: { label: 'New node', completed: false },
         type: 'objective',
+        selected: false,
       };
 
       setNodes((prev) => [...prev, newNode]);
@@ -76,6 +91,28 @@ export const Objectives = () => {
     setIsCreateMode(true);
   };
 
+  React.useEffect(() => {
+    const keyHandler = (event: KeyboardEvent) => {
+      if (event.code === 'KeyC' && event.ctrlKey) {
+        const selectedNodes = nodes.filter((node) => node.selected);
+
+        setClipboardNodes(selectedNodes);
+      }
+
+      if (event.code === 'KeyV' && event.ctrlKey) {
+        console.log(mousePositionRef.current);
+      }
+    };
+
+    window.addEventListener('keydown', keyHandler);
+
+    return () => window.removeEventListener('keydown', keyHandler);
+  }, [nodes]);
+
+  const handleMouseMove = (event: React.MouseEvent) => {
+    mousePositionRef.current = screenToFlowPosition({ x: event.clientX, y: event.clientY });
+  };
+
   return (
     <div className={s.root}>
       <button onClick={handleCreateNode} className={s.addNode}>
@@ -86,6 +123,7 @@ export const Objectives = () => {
         style={{ width: '100%', height: '600px' }}
       >
         <ReactFlow
+          onMouseMove={handleMouseMove}
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
