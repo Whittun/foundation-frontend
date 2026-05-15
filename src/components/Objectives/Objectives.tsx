@@ -10,6 +10,7 @@ import {
   Controls,
   useReactFlow,
   type XYPosition,
+  getNodesBounds,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -17,15 +18,21 @@ import s from './Objectives.module.css';
 import clsx from 'clsx';
 import { ObjectiveNode } from './components/ObjectiveNode';
 
-type Node = {
+type ObjectiveFlowNode = {
   id: string;
   position: { x: number; y: number };
   data: { label: string; completed: boolean };
   type: string;
-  selected: boolean;
+  selected?: boolean;
 };
 
-const initialNodes: Node[] = [
+type ObjectiveFlowEdge = {
+  id: string;
+  source: string;
+  target: string;
+};
+
+const initialNodes: ObjectiveFlowNode[] = [
   {
     id: 'n1',
     position: { x: 0, y: 0 },
@@ -52,7 +59,13 @@ export const Objectives = () => {
   const [nodes, setNodes] = React.useState(initialNodes);
   const [edges, setEdges] = React.useState(initialEdges);
   const [isCreateMode, setIsCreateMode] = React.useState(false);
-  const [clipboardNodes, setClipboardNodes] = React.useState<Node[]>();
+  const [clipboardGraph, setClipboardGraph] = React.useState<{
+    nodes: ObjectiveFlowNode[] | null;
+    edges: ObjectiveFlowEdge[] | null;
+  }>({
+    nodes: null,
+    edges: null,
+  });
 
   const mousePositionRef = React.useRef<XYPosition | null>(null);
 
@@ -94,20 +107,80 @@ export const Objectives = () => {
   React.useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
       if (event.code === 'KeyC' && event.ctrlKey) {
+        event.preventDefault();
+
         const selectedNodes = nodes.filter((node) => node.selected);
 
-        setClipboardNodes(selectedNodes);
+        const selectedNodeIds = selectedNodes.map((node) => {
+          return node.id;
+        });
+
+        const selectedEdges = edges.filter((edge) => {
+          return selectedNodeIds.includes(edge.source) && selectedNodeIds.includes(edge.target);
+        });
+
+        if (selectedNodes.length === 0) return;
+
+        setClipboardGraph({ nodes: selectedNodes, edges: selectedEdges });
       }
 
       if (event.code === 'KeyV' && event.ctrlKey) {
-        console.log(mousePositionRef.current);
+        event.preventDefault();
+
+        const mousePosition = mousePositionRef.current;
+
+        if (!clipboardGraph.nodes || clipboardGraph.nodes?.length === 0 || !mousePosition) {
+          return;
+        }
+
+        const bounds = getNodesBounds(clipboardGraph.nodes, { nodeOrigin: [0.5, 0.5] });
+
+        const groupCenterX = bounds.x + bounds.width / 2;
+        const groupCenterY = bounds.y + bounds.height / 2;
+
+        const idNodesMap: Record<string, string> = {};
+
+        const newNodes = clipboardGraph.nodes.map((clipboardNode) => {
+          const relativeX = clipboardNode.position.x - groupCenterX;
+          const relativeY = clipboardNode.position.y - groupCenterY;
+
+          const newId = Math.random().toString();
+
+          idNodesMap[clipboardNode.id] = newId;
+
+          return {
+            id: newId,
+            position: { x: mousePosition.x + relativeX, y: mousePosition.y + relativeY },
+            data: clipboardNode.data,
+            type: 'objective',
+            selected: true,
+          };
+        });
+
+        const newEdges = clipboardGraph.edges?.map((edge) => {
+          return {
+            id: Math.random().toString(),
+            source: idNodesMap[edge.source],
+            target: idNodesMap[edge.target],
+          };
+        });
+
+        setNodes((prev) => {
+          const unselectedPreviousNodes = prev.map((node) => {
+            return { ...node, selected: false };
+          });
+
+          return [...unselectedPreviousNodes, ...newNodes];
+        });
+
+        setEdges((prev) => [...prev, ...newEdges]);
       }
     };
 
     window.addEventListener('keydown', keyHandler);
 
     return () => window.removeEventListener('keydown', keyHandler);
-  }, [nodes]);
+  }, [nodes, clipboardGraph]);
 
   const handleMouseMove = (event: React.MouseEvent) => {
     mousePositionRef.current = screenToFlowPosition({ x: event.clientX, y: event.clientY });
