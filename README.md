@@ -1,73 +1,19 @@
-# React + TypeScript + Vite
+# Foundation
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The main idea behind Foundation is to help people see their life path and support them in moving toward their goals.
 
-Currently, two official plugins are available:
+<img width="1672" height="941" alt="53d452f0-6a0f-48fc-95d4-3317a4be92d8" src="https://github.com/user-attachments/assets/768a9dd4-f7b0-47eb-9a8a-8f7c88a42d1a" />
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## What is Foundation?
 
-## React Compiler
+Foundation is a project I’m building based on my own life path, experience, and observations.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+It brings together tools that help people see their life path more clearly, notice their progress, and return to what truly matters to them. I first test some of these tools on myself, and then gradually turn them into full application features.
 
-## Expanding the ESLint configuration
+I want the app to show not just separate tasks or habits, but the bigger picture of personal movement. So that a person can open Foundation and think:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+> “I’ve already come a long way. I have progress. I have direction. I’m still moving forward.”
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+I believe many people lack a clear way to see the progress they have already made and continue to make. When a person can see their path, it becomes easier not to devalue themselves, to preserve their energy, and to keep going.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
-```
+That’s why I’m bringing into one project everything that can support this journey: from tracking habits and daily actions to visual maps of goals, progress, achievements, and future directions for growth.
