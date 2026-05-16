@@ -60,11 +60,11 @@ export const Objectives = () => {
   const [edges, setEdges] = React.useState(initialEdges);
   const [isCreateMode, setIsCreateMode] = React.useState(false);
   const [clipboardGraph, setClipboardGraph] = React.useState<{
-    nodes: ObjectiveFlowNode[] | null;
-    edges: ObjectiveFlowEdge[] | null;
+    nodes: ObjectiveFlowNode[];
+    edges: ObjectiveFlowEdge[];
   }>({
-    nodes: null,
-    edges: null,
+    nodes: [],
+    edges: [],
   });
 
   const mousePositionRef = React.useRef<XYPosition | null>(null);
@@ -111,6 +111,8 @@ export const Objectives = () => {
 
         const selectedNodes = nodes.filter((node) => node.selected);
 
+        if (selectedNodes.length === 0) return;
+
         const selectedNodeIds = selectedNodes.map((node) => {
           return node.id;
         });
@@ -118,8 +120,6 @@ export const Objectives = () => {
         const selectedEdges = edges.filter((edge) => {
           return selectedNodeIds.includes(edge.source) && selectedNodeIds.includes(edge.target);
         });
-
-        if (selectedNodes.length === 0) return;
 
         setClipboardGraph({ nodes: selectedNodes, edges: selectedEdges });
       }
@@ -129,7 +129,7 @@ export const Objectives = () => {
 
         const mousePosition = mousePositionRef.current;
 
-        if (!clipboardGraph.nodes || clipboardGraph.nodes?.length === 0 || !mousePosition) {
+        if (clipboardGraph.nodes?.length === 0 || !mousePosition) {
           return;
         }
 
@@ -148,17 +148,20 @@ export const Objectives = () => {
 
           idNodesMap[clipboardNode.id] = newId;
 
+          const dataCopy = structuredClone(clipboardNode.data);
+
           return {
             id: newId,
             position: { x: mousePosition.x + relativeX, y: mousePosition.y + relativeY },
-            data: clipboardNode.data,
+            data: dataCopy,
             type: 'objective',
             selected: true,
           };
         });
 
-        const newEdges = clipboardGraph.edges?.map((edge) => {
+        const newEdges = clipboardGraph.edges.map((edge) => {
           return {
+            ...edge,
             id: Math.random().toString(),
             source: idNodesMap[edge.source],
             target: idNodesMap[edge.target],
@@ -180,7 +183,7 @@ export const Objectives = () => {
     window.addEventListener('keydown', keyHandler);
 
     return () => window.removeEventListener('keydown', keyHandler);
-  }, [nodes, clipboardGraph]);
+  }, [nodes, edges, clipboardGraph]);
 
   const handleMouseMove = (event: React.MouseEvent) => {
     mousePositionRef.current = screenToFlowPosition({ x: event.clientX, y: event.clientY });

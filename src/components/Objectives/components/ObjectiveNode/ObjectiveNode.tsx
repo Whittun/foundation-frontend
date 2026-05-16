@@ -8,7 +8,7 @@ import { CompletedTag } from '../../../../shared/CompletedTag';
 
 type ObjectiveNodeData = {
   label: string;
-  completed: true;
+  completed: boolean;
 };
 
 type ObjectiveNodeProps = NodeProps<Node<ObjectiveNodeData>>;
@@ -17,14 +17,22 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
   const [isEditing, setIsEditing] = React.useState(false);
   const [draftValue, setDraftValue] = React.useState(data.label);
 
+  const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
+
   const { updateNodeData } = useReactFlow();
 
   const doubleClickHandle = () => {
+    setDraftValue(data.label);
     setIsEditing(true);
   };
 
   const blurHandler = () => {
-    updateNodeData(id, { label: draftValue });
+    const trimmedValue = draftValue.trim();
+
+    if (trimmedValue.length > 0) {
+      updateNodeData(id, { label: trimmedValue });
+    }
+
     setIsEditing(false);
   };
 
@@ -50,10 +58,16 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
     updateNodeData(id, { completed: !data.completed });
   };
 
+  React.useEffect(() => {
+    if (isEditing && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isEditing]);
+
   return (
     <div className={clsx(s.root, { [s.selected]: selected, [s.completed]: data.completed })}>
-      {selected && (
-        <button onClick={completeButtonHandler} className={clsx(s.comleteButton, 'nodrag')}>
+      {selected && !isEditing && (
+        <button onClick={completeButtonHandler} className={clsx(s.completeButton, 'nodrag')}>
           {data.completed ? <CornerDownLeft /> : <Check />}
         </button>
       )}
@@ -68,6 +82,7 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
           value={draftValue}
           onChange={(event) => setDraftValue(event.target.value)}
           onBlur={blurHandler}
+          ref={textareaRef}
         />
       ) : (
         <React.Fragment>
