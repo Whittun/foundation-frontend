@@ -10,6 +10,9 @@ import {
   Controls,
   useReactFlow,
   type XYPosition,
+  type OnNodesChange,
+  type OnEdgesChange,
+  type OnConnect,
   getNodesBounds,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -71,15 +74,15 @@ export const Objectives = () => {
 
   const { screenToFlowPosition } = useReactFlow();
 
-  const onNodesChange = React.useCallback(
+  const onNodesChange: OnNodesChange<ObjectiveFlowNode> = React.useCallback(
     (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
     [],
   );
-  const onEdgesChange = React.useCallback(
+  const onEdgesChange: OnEdgesChange<ObjectiveFlowEdge> = React.useCallback(
     (changes) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
     [],
   );
-  const onConnect = React.useCallback(
+  const onConnect: OnConnect = React.useCallback(
     (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
     [],
   );
