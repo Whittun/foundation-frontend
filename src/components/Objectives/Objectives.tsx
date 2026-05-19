@@ -20,12 +20,16 @@ import '@xyflow/react/dist/style.css';
 import s from './Objectives.module.css';
 import clsx from 'clsx';
 import { ObjectiveNode } from './components/ObjectiveNode';
+import {
+  useGetObjectivesGraphQuery,
+  useSaveObjectivesGraphMutation,
+} from '../../api/objectivesApi';
 
 type ObjectiveFlowNode = {
   id: string;
   position: { x: number; y: number };
   data: { label: string; completed: boolean };
-  type: string;
+  type: 'objective';
   selected?: boolean;
 };
 
@@ -59,8 +63,8 @@ const nodeTypes = {
 };
 
 export const Objectives = () => {
-  const [nodes, setNodes] = React.useState(initialNodes);
-  const [edges, setEdges] = React.useState(initialEdges);
+  const [nodes, setNodes] = React.useState<ObjectiveFlowNode[]>([]);
+  const [edges, setEdges] = React.useState<ObjectiveFlowEdge[]>([]);
   const [isCreateMode, setIsCreateMode] = React.useState(false);
   const [clipboardGraph, setClipboardGraph] = React.useState<{
     nodes: ObjectiveFlowNode[];
@@ -69,6 +73,7 @@ export const Objectives = () => {
     nodes: [],
     edges: [],
   });
+  const [currentVersion, setCurrentVersion] = React.useState<number>();
 
   const mousePositionRef = React.useRef<XYPosition | null>(null);
 
@@ -83,14 +88,30 @@ export const Objectives = () => {
     [],
   );
   const onConnect: OnConnect = React.useCallback(
-    (params) => setEdges((edgesSnapshot) => addEdge(params, edgesSnapshot)),
+    (params) =>
+      setEdges((edgesSnapshot) =>
+        addEdge({ ...params, ...params, id: crypto.randomUUID() }, edgesSnapshot),
+      ),
     [],
   );
+
+  const { data } = useGetObjectivesGraphQuery();
+  const [saveObjectivesGraph] = useSaveObjectivesGraphMutation();
+
+  React.useEffect(() => {
+    console.log(data);
+
+    if (data) {
+      setCurrentVersion(data.version);
+      setNodes(data.nodes);
+      setEdges(data.edges);
+    }
+  }, [data]);
 
   const handlePaneClick = (event: React.MouseEvent) => {
     if (isCreateMode) {
       const newNode = {
-        id: Date.now().toString(),
+        id: crypto.randomUUID(),
         position: screenToFlowPosition({ x: event.clientX, y: event.clientY }),
         data: { label: 'New node', completed: false },
         type: 'objective',
@@ -147,7 +168,7 @@ export const Objectives = () => {
           const relativeX = clipboardNode.position.x - groupCenterX;
           const relativeY = clipboardNode.position.y - groupCenterY;
 
-          const newId = Math.random().toString();
+          const newId = crypto.randomUUID();
 
           idNodesMap[clipboardNode.id] = newId;
 
@@ -165,7 +186,7 @@ export const Objectives = () => {
         const newEdges = clipboardGraph.edges.map((edge) => {
           return {
             ...edge,
-            id: Math.random().toString(),
+            id: crypto.randomUUID(),
             source: idNodesMap[edge.source],
             target: idNodesMap[edge.target],
           };
@@ -192,11 +213,35 @@ export const Objectives = () => {
     mousePositionRef.current = screenToFlowPosition({ x: event.clientX, y: event.clientY });
   };
 
+  const handleSaveGraph = () => {
+    if (currentVersion) {
+      saveObjectivesGraph({
+        version: currentVersion,
+        nodes: nodes.map((node) => {
+          return {
+            id: node.id,
+            type: node.type,
+            position: node.position,
+            data: node.data,
+          };
+        }),
+        edges: edges.map((edge) => {
+          return {
+            id: edge.id,
+            source: edge.source,
+            target: edge.target,
+          };
+        }),
+      });
+    }
+  };
+
   return (
     <div className={s.root}>
       <button onClick={handleCreateNode} className={s.addNode}>
         {'add node'}
       </button>
+      <button onClick={handleSaveGraph}>save</button>
       <div
         className={clsx(s.flowWrapper, { [s.createMode]: isCreateMode })}
         style={{ width: '100%', height: '600px' }}

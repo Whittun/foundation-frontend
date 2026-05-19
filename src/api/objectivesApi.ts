@@ -24,7 +24,6 @@ export const objectivesApi = createApi({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: ['Objectives'],
     }),
   }),
 });
