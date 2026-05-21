@@ -76,24 +76,47 @@ export const Objectives = () => {
       return;
     }
 
-    const savedGraph = await saveObjectivesGraph({
-      version: currentVersion,
-      nodes: nodes.map((node) => ({
-        id: node.id,
-        type: node.type,
-        position: node.position,
-        data: node.data,
-      })),
-      edges: edges.map((edge) => ({
-        id: edge.id,
-        source: edge.source,
-        target: edge.target,
-      })),
-    }).unwrap();
+    try {
+      const savedGraph = await saveObjectivesGraph({
+        version: currentVersion,
+        nodes: nodes.map((node) => ({
+          id: node.id,
+          type: node.type,
+          position: node.position,
+          data: node.data,
+        })),
+        edges: edges.map((edge) => ({
+          id: edge.id,
+          source: edge.source,
+          target: edge.target,
+        })),
+      }).unwrap();
 
-    setCurrentVersion(savedGraph.version);
+      setCurrentVersion(savedGraph.version);
+      setDirty(false);
 
-    dispatch(objectivesApi.util.updateQueryData('getObjectivesGraph', undefined, () => savedGraph));
+      dispatch(
+        objectivesApi.util.updateQueryData('getObjectivesGraph', undefined, () => savedGraph),
+      );
+    } catch (error) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'status' in error &&
+        error.status === 409
+      ) {
+        const freshGraph = await refetch().unwrap();
+
+        setCurrentVersion(freshGraph.version);
+        setNodes(freshGraph.nodes);
+        setEdges(freshGraph.edges);
+        setDirty(false);
+
+        return;
+      }
+
+      throw error;
+    }
   }, [currentVersion, nodes, edges, saveObjectivesGraph, dispatch]);
 
   const isPersistableNodeChange = (changes: NodeChange<ObjectiveFlowNode>[]) => {
@@ -130,7 +153,7 @@ export const Objectives = () => {
     setDirty(true);
   }, []);
 
-  const { data } = useGetObjectivesGraphQuery();
+  const { data, refetch } = useGetObjectivesGraphQuery();
 
   React.useEffect(() => {
     if (!data) {
@@ -269,7 +292,7 @@ export const Objectives = () => {
     }, 1000);
 
     return () => clearTimeout(timeout);
-  }, [nodes, edges]);
+  }, [dirty, nodes, edges, currentVersion, handleSaveGraph]);
 
   const updateObjectiveNodeData = React.useCallback(
     (id: string, patch: { label?: string; completed?: boolean }) => {
