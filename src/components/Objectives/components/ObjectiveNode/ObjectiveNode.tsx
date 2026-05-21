@@ -1,10 +1,11 @@
-import { Handle, Position, useReactFlow, type Node, type NodeProps } from '@xyflow/react';
+import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import s from './ObjectiveNode.module.css';
 
 import clsx from 'clsx';
 import React from 'react';
 import { Check, CornerDownLeft } from 'lucide-react';
 import { CompletedTag } from '../../../../shared/CompletedTag';
+import { useObjectiveNodeActions } from '../../ObjectiveNodeActionsContext';
 
 type ObjectiveNodeData = {
   label: string;
@@ -19,7 +20,7 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
 
   const textareaRef = React.useRef<HTMLTextAreaElement | null>(null);
 
-  const { updateNodeData } = useReactFlow();
+  const { updateObjectiveNodeData } = useObjectiveNodeActions();
 
   const doubleClickHandle = () => {
     setDraftValue(data.label);
@@ -30,7 +31,7 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
     const trimmedValue = draftValue.trim();
 
     if (trimmedValue.length > 0) {
-      updateNodeData(id, { label: trimmedValue });
+      updateObjectiveNodeData(id, { label: trimmedValue, completed: data.completed });
     }
 
     setIsEditing(false);
@@ -43,7 +44,7 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
 
     if (event.key === 'Enter' && trimmedValue.length > 0) {
       event.preventDefault();
-      updateNodeData(id, { label: trimmedValue });
+      updateObjectiveNodeData(id, { label: trimmedValue, completed: data.completed });
       setIsEditing(false);
     }
 
@@ -55,7 +56,7 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
   };
 
   const completeButtonHandler = () => {
-    updateNodeData(id, { completed: !data.completed });
+    updateObjectiveNodeData(id, { completed: !data.completed });
   };
 
   React.useEffect(() => {

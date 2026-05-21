@@ -14,6 +14,8 @@ import {
   type OnEdgesChange,
   type OnConnect,
   getNodesBounds,
+  type NodeChange,
+  type EdgeChange,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -21,9 +23,12 @@ import s from './Objectives.module.css';
 import clsx from 'clsx';
 import { ObjectiveNode } from './components/ObjectiveNode';
 import {
+  objectivesApi,
   useGetObjectivesGraphQuery,
   useSaveObjectivesGraphMutation,
 } from '../../api/objectivesApi';
+import { useAppDispatch } from '../../hooks';
+import { ObjectiveNodeActionsProvider } from './ObjectiveNodeActionsContext';
 
 type ObjectiveFlowNode = {
   id: string;
@@ -38,25 +43,6 @@ type ObjectiveFlowEdge = {
   source: string;
   target: string;
 };
-
-const initialNodes: ObjectiveFlowNode[] = [
-  {
-    id: 'n1',
-    position: { x: 0, y: 0 },
-    data: { label: 'Node 1', completed: false },
-    type: 'objective',
-    selected: false,
-  },
-  {
-    id: 'n2',
-    position: { x: 0, y: 100 },
-    data: { label: 'Node 2', completed: false },
-    type: 'objective',
-    selected: false,
-  },
-];
-
-const initialEdges = [{ id: 'n1-n2', source: 'n1', target: 'n2' }];
 
 const nodeTypes = {
   objective: ObjectiveNode,
@@ -74,38 +60,94 @@ export const Objectives = () => {
     edges: [],
   });
   const [currentVersion, setCurrentVersion] = React.useState<number>();
+  const [dirty, setDirty] = React.useState(false);
 
   const mousePositionRef = React.useRef<XYPosition | null>(null);
+  const hasHydratedGraphRef = React.useRef(false);
+
+  const [saveObjectivesGraph] = useSaveObjectivesGraphMutation();
 
   const { screenToFlowPosition } = useReactFlow();
 
-  const onNodesChange: OnNodesChange<ObjectiveFlowNode> = React.useCallback(
-    (changes) => setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot)),
-    [],
-  );
-  const onEdgesChange: OnEdgesChange<ObjectiveFlowEdge> = React.useCallback(
-    (changes) => setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot)),
-    [],
-  );
-  const onConnect: OnConnect = React.useCallback(
-    (params) =>
-      setEdges((edgesSnapshot) =>
-        addEdge({ ...params, ...params, id: crypto.randomUUID() }, edgesSnapshot),
-      ),
-    [],
-  );
+  const dispatch = useAppDispatch();
+
+  const handleSaveGraph = React.useCallback(async () => {
+    if (!currentVersion) {
+      return;
+    }
+
+    const savedGraph = await saveObjectivesGraph({
+      version: currentVersion,
+      nodes: nodes.map((node) => ({
+        id: node.id,
+        type: node.type,
+        position: node.position,
+        data: node.data,
+      })),
+      edges: edges.map((edge) => ({
+        id: edge.id,
+        source: edge.source,
+        target: edge.target,
+      })),
+    }).unwrap();
+
+    setCurrentVersion(savedGraph.version);
+
+    dispatch(objectivesApi.util.updateQueryData('getObjectivesGraph', undefined, () => savedGraph));
+  }, [currentVersion, nodes, edges, saveObjectivesGraph, dispatch]);
+
+  const isPersistableNodeChange = (changes: NodeChange<ObjectiveFlowNode>[]) => {
+    return changes.some((change) => {
+      return change.type === 'position' || change.type === 'remove' || change.type === 'add';
+    });
+  };
+
+  const isPersistableEdgeChange = (changes: EdgeChange<ObjectiveFlowEdge>[]) => {
+    return changes.some((change) => {
+      return change.type === 'remove' || change.type === 'add';
+    });
+  };
+
+  const onNodesChange: OnNodesChange<ObjectiveFlowNode> = React.useCallback((changes) => {
+    setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
+
+    if (isPersistableNodeChange(changes)) {
+      setDirty(true);
+    }
+  }, []);
+
+  const onEdgesChange: OnEdgesChange<ObjectiveFlowEdge> = React.useCallback((changes) => {
+    setEdges((edgesSnapshot) => applyEdgeChanges(changes, edgesSnapshot));
+
+    if (isPersistableEdgeChange(changes)) {
+      setDirty(true);
+    }
+  }, []);
+
+  const onConnect: OnConnect = React.useCallback((params) => {
+    setEdges((edgesSnapshot) => addEdge({ ...params, id: crypto.randomUUID() }, edgesSnapshot));
+
+    setDirty(true);
+  }, []);
 
   const { data } = useGetObjectivesGraphQuery();
-  const [saveObjectivesGraph] = useSaveObjectivesGraphMutation();
 
   React.useEffect(() => {
-    console.log(data);
-
-    if (data) {
-      setCurrentVersion(data.version);
-      setNodes(data.nodes);
-      setEdges(data.edges);
+    if (!data) {
+      return;
     }
+
+    if (hasHydratedGraphRef.current) {
+      return;
+    }
+
+    hasHydratedGraphRef.current = true;
+
+    setCurrentVersion(data.version);
+    setNodes(data.nodes);
+    setEdges(data.edges);
+
+    setDirty(false);
   }, [data]);
 
   const handlePaneClick = (event: React.MouseEvent) => {
@@ -119,6 +161,7 @@ export const Objectives = () => {
       };
 
       setNodes((prev) => [...prev, newNode]);
+      setDirty(true);
     }
 
     setIsCreateMode(false);
@@ -201,6 +244,7 @@ export const Objectives = () => {
         });
 
         setEdges((prev) => [...prev, ...newEdges]);
+        setDirty(true);
       }
     };
 
@@ -213,28 +257,46 @@ export const Objectives = () => {
     mousePositionRef.current = screenToFlowPosition({ x: event.clientX, y: event.clientY });
   };
 
-  const handleSaveGraph = () => {
-    if (currentVersion) {
-      saveObjectivesGraph({
-        version: currentVersion,
-        nodes: nodes.map((node) => {
-          return {
-            id: node.id,
-            type: node.type,
-            position: node.position,
-            data: node.data,
-          };
-        }),
-        edges: edges.map((edge) => {
-          return {
-            id: edge.id,
-            source: edge.source,
-            target: edge.target,
-          };
-        }),
-      });
+  React.useEffect(() => {
+    if (!currentVersion) return;
+
+    if (!dirty) {
+      return;
     }
-  };
+
+    const timeout = setTimeout(() => {
+      handleSaveGraph();
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, [nodes, edges]);
+
+  const updateObjectiveNodeData = React.useCallback(
+    (id: string, patch: { label?: string; completed?: boolean }) => {
+      setNodes((prev) =>
+        prev.map((node) => {
+          if (node.id !== id) {
+            return node;
+          }
+
+          return {
+            ...node,
+            data: {
+              ...node.data,
+              ...patch,
+            },
+          };
+        }),
+      );
+      setDirty(true);
+    },
+    [],
+  );
+
+  const objectiveNodeActions = React.useMemo(
+    () => ({ updateObjectiveNodeData }),
+    [updateObjectiveNodeData],
+  );
 
   return (
     <div className={s.root}>
@@ -246,25 +308,27 @@ export const Objectives = () => {
         className={clsx(s.flowWrapper, { [s.createMode]: isCreateMode })}
         style={{ width: '100%', height: '600px' }}
       >
-        <ReactFlow
-          onMouseMove={handleMouseMove}
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onPaneClick={(event) => handlePaneClick(event)}
-          fitView
-          nodeOrigin={[0.5, 0.5]}
-          deleteKeyCode={['Delete', 'Backspace']}
-          nodeTypes={nodeTypes}
-          snapToGrid={true}
-          snapGrid={[20, 20]}
-        >
-          <Background color="#000000" variant={BackgroundVariant.Dots} />
-          <MiniMap />
-          <Controls />
-        </ReactFlow>
+        <ObjectiveNodeActionsProvider value={objectiveNodeActions}>
+          <ReactFlow
+            onMouseMove={handleMouseMove}
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            onPaneClick={(event) => handlePaneClick(event)}
+            fitView
+            nodeOrigin={[0.5, 0.5]}
+            deleteKeyCode={['Delete', 'Backspace']}
+            nodeTypes={nodeTypes}
+            snapToGrid={true}
+            snapGrid={[20, 20]}
+          >
+            <Background color="#000000" variant={BackgroundVariant.Dots} />
+            <MiniMap />
+            <Controls />
+          </ReactFlow>
+        </ObjectiveNodeActionsProvider>
       </div>
     </div>
   );

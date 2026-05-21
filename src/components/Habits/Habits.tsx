@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import s from './Habits.module.css';
-import { Check, Plus, SquarePen, Trash } from 'lucide-react';
+import { Plus, SquarePen, Trash } from 'lucide-react';
 import {
   useCreateHabitLevelMutation,
   useDeleteHabitLevelMutation,
