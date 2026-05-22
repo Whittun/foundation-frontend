@@ -29,6 +29,7 @@ import {
 } from '../../api/objectivesApi';
 import { useAppDispatch } from '../../hooks';
 import { ObjectiveNodeActionsProvider } from './ObjectiveNodeActionsContext';
+import { Plus } from 'lucide-react';
 
 type ObjectiveFlowNode = {
   id: string;
@@ -191,7 +192,7 @@ export const Objectives = () => {
   };
 
   const handleCreateNode = () => {
-    setIsCreateMode(true);
+    setIsCreateMode((prev) => !prev);
   };
 
   React.useEffect(() => {
@@ -323,14 +324,13 @@ export const Objectives = () => {
 
   return (
     <div className={s.root}>
-      <button onClick={handleCreateNode} className={s.addNode}>
-        {'add node'}
-      </button>
-      <button onClick={handleSaveGraph}>save</button>
-      <div
-        className={clsx(s.flowWrapper, { [s.createMode]: isCreateMode })}
-        style={{ width: '100%', height: '600px' }}
+      <button
+        onClick={handleCreateNode}
+        className={clsx(s.addNode, { [s.activeCreate]: isCreateMode })}
       >
+        <Plus /> Add Objective
+      </button>
+      <div className={clsx(s.flowWrapper, { [s.createMode]: isCreateMode })}>
         <ObjectiveNodeActionsProvider value={objectiveNodeActions}>
           <ReactFlow
             onMouseMove={handleMouseMove}

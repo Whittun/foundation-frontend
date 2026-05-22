@@ -12,5 +12,6 @@
 
 .mainContent {
   width: 100%;
+  height: 100%;
   margin-left: calc(250px + 16px);
 }

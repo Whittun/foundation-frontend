@@ -1,7 +1,45 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 32px);
+}
+
 .addNode {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 20px;
+  padding: 6px 10px;
+  align-self: self-start;
+
+  color: #ffffff;
+
+  background-color: var(--main-theme-color);
+  border: none;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: 0.2s all;
+
+  &:hover {
+    background-color: var(--button-hover-bg);
+  }
+
+  &.activeCreate {
+    border-color: var(--main-theme-color);
+    background-color: var(--button-hover-bg);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 .createMode :global(.react-flow__pane) {
   cursor: cell;
+}
+
+.flowWrapper {
+  flex-grow: 1;
 }
