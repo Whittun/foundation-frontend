@@ -40,3 +40,11 @@ That’s why I’m bringing into one project everything that can support this jo
 - class-validator
 - class-transformer
 - Docker / Docker Compose
+
+## Current Status
+
+The current MVP includes:
+
+- Year Tracker
+- Habit Levels
+- Objectives Map with React Flow, autosave and backend persistence
