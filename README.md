@@ -17,3 +17,26 @@ I want the app to show not just separate tasks or habits, but the bigger picture
 I believe many people lack a clear way to see the progress they have already made and continue to make. When a person can see their path, it becomes easier not to devalue themselves, to preserve their energy, and to keep going.
 
 That’s why I’m bringing into one project everything that can support this journey: from tracking habits and daily actions to visual maps of objectives, progress, achievements, and future directions for growth.
+
+## Tech Stack
+
+### Frontend
+
+- React
+- TypeScript
+- Redux Toolkit
+- RTK Query
+- React Router
+- React Flow
+- CSS Modules
+- Vite
+
+### Backend
+
+- NestJS
+- TypeScript
+- PostgreSQL
+- TypeORM
+- class-validator
+- class-transformer
+- Docker / Docker Compose
