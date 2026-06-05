@@ -5,6 +5,7 @@ export const dayRatingsApi = createApi({
   reducerPath: 'dayRatingsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3000',
+    credentials: 'include',
   }),
 
   tagTypes: ['YearRatings'],

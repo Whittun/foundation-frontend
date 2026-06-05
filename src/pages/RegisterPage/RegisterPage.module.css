@@ -1,0 +1,7 @@
+.root {
+  height: calc(100vh - 32px);
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

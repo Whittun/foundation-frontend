@@ -1,0 +1,57 @@
+.root {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  width: 340px;
+  padding: 20px;
+  background-color: var(--main-theme-color);
+  border-radius: 8px;
+}
+
+.title {
+  margin: 0;
+  margin-bottom: 10px;
+
+  color: #ffffff;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.inputWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+
+  color: #ffffff;
+}
+
+.input {
+  padding: 6px;
+
+  border-radius: 8px;
+  border: none;
+}
+
+.send {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+
+  font-size: 16px;
+  color: #ffffff;
+
+  cursor: pointer;
+  background-color: var(--accent-theme-color);
+  border: none;
+  border-radius: 8px;
+  transition: 0.2s all;
+
+  &:hover {
+    background-color: var(--button-hover-bg);
+  }
+}

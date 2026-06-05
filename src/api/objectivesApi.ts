@@ -6,6 +6,7 @@ export const objectivesApi = createApi({
   reducerPath: 'objectivesApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3000/objectives',
+    credentials: 'include',
   }),
 
   tagTypes: ['Objectives'],

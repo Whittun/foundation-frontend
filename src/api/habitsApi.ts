@@ -10,6 +10,7 @@ export const habitsApi = createApi({
   reducerPath: 'habitsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'http://localhost:3000/habits',
+    credentials: 'include',
   }),
 
   tagTypes: ['Habits', 'HabitLevels'],
