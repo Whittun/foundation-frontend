@@ -1,0 +1,23 @@
+.root {
+  margin-top: auto;
+}
+
+.login {
+  margin-bottom: 0;
+
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.logout {
+  padding: 0;
+
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  text-decoration: underline;
+  cursor: pointer;
+
+  background-color: transparent;
+  border: none;
+}

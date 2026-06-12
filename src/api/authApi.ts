@@ -23,7 +23,19 @@ export const authApi = createApi({
         body: userData,
       }),
     }),
+    me: builder.query<AuthResponse, void>({
+      query: () => ({
+        url: '/me',
+      }),
+    }),
+
+    logout: builder.mutation<{ success: boolean }, void>({
+      query: () => ({
+        url: '/logout',
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation } = authApi;
+export const { useRegisterMutation, useLoginMutation, useMeQuery, useLogoutMutation } = authApi;

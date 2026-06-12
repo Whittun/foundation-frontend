@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom';
 import s from './AppMenu.module.css';
 import { CalendarDays, ChartNoAxesColumnIncreasing, Flag, Map } from 'lucide-react';
 import clsx from 'clsx';
+import { AuthenticatedUser } from '../AuthenticatedUser';
 
 export const AppMenu = () => {
   return (
@@ -36,6 +37,7 @@ export const AppMenu = () => {
           </NavLink>
         </li>
       </ul>
+      <AuthenticatedUser />
     </div>
   );
 };
