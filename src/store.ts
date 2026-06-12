@@ -3,12 +3,9 @@ import { dayRatingsApi } from './api/dayRatingsApi';
 import { habitsApi } from './api/habitsApi';
 import { objectivesApi } from './api/objectivesApi';
 import { authApi } from './api/authApi';
-import { authReducer } from './slices/authSlice';
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer,
-
     [dayRatingsApi.reducerPath]: dayRatingsApi.reducer,
     [habitsApi.reducerPath]: habitsApi.reducer,
     [objectivesApi.reducerPath]: objectivesApi.reducer,

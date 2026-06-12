@@ -1,6 +1,5 @@
 .root {
   display: flex;
-  gap: 10px;
   flex-direction: column;
   width: 340px;
   padding: 20px;
@@ -54,4 +53,18 @@
   &:hover {
     background-color: var(--button-hover-bg);
   }
+}
+
+.error {
+  font-size: 14px;
+  color: var(--error-color);
+}
+
+.disabledSend {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.label {
+  width: max-content;
 }
