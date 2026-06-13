@@ -1,9 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authApi, useLoginMutation } from '../../../api/authApi';
-import { AuthForm } from '../../../components/AuthForm';
+import { AuthForm, authApi, type AuthRequest, useLoginMutation } from '../../../features/Auth';
 import { useAppDispatch } from '../../../hooks';
-import type { AuthRequest } from '../../../types/authTypes';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 import s from './LoginPage.module.css';
 

@@ -1,4 +1,4 @@
-import { YearTracker } from '../../../components/YearTracker';
+import { YearTracker } from '../../../features/YearTracker';
 
 export const YearTrackerPage = () => {
   return <YearTracker />;

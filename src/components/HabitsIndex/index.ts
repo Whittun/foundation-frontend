@@ -1,1 +1,0 @@
-export { HabitsIndex } from './HabitsIndex';

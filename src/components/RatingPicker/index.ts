@@ -1,1 +1,0 @@
-export { RatingPicker } from './RatingPicker';

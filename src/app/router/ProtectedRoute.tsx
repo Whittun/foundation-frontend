@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useMeQuery } from '../../api/authApi';
+import { useMeQuery } from '../../features/Auth';
 
 export const ProtectedRoute = () => {
   const { data, isLoading, isError } = useMeQuery();

@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { useLogoutMutation, useMeQuery } from '../../api/authApi';
+import { useLogoutMutation, useMeQuery } from '../../features/Auth';
 
-import s from './AuthenticatedUser.module.css';
 import { useAppDispatch } from '../../hooks';
 import { resetUserSessionCache } from '../../utils/resetUserSessionCache';
+import s from './AuthenticatedUser.module.css';
 
 export const AuthenticatedUser = () => {
   const { data, isError } = useMeQuery();

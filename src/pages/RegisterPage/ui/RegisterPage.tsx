@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { useRegisterMutation } from '../../../api/authApi';
-import { AuthForm } from '../../../components/AuthForm';
-import type { AuthRequest } from '../../../types/authTypes';
+import { AuthForm, type AuthRequest, useRegisterMutation } from '../../../features/Auth';
 import { getErrorMessage } from '../../../utils/getErrorMessage';
 
-import s from './RegisterPage.module.css';
 import React from 'react';
+import s from './RegisterPage.module.css';
 
 export const RegisterPage = () => {
   const [register, { isLoading }] = useRegisterMutation();
