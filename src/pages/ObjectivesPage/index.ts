@@ -1,1 +1,1 @@
-export { ObjectivesPage } from './ObjectivesPage';
+export { ObjectivesPage } from './ui/ObjectivesPage';

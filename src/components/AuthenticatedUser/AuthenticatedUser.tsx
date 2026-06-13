@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { authApi, useLogoutMutation, useMeQuery } from '../../api/authApi';
+import { useLogoutMutation, useMeQuery } from '../../api/authApi';
 
 import s from './AuthenticatedUser.module.css';
 import { useAppDispatch } from '../../hooks';

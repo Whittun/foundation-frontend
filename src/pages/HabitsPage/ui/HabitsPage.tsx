@@ -1,7 +1,7 @@
-import s from './HabitsPage.module.css';
-import { Outlet } from 'react-router-dom';
-import { HabitsMenu } from '../../components/HabitsMenu';
 import React from 'react';
+import { Outlet } from 'react-router-dom';
+import { HabitsMenu } from '../../../components/HabitsMenu';
+import s from './HabitsPage.module.css';
 
 export const HabitsPage = () => {
   const [isShowForm, setIsShowForm] = React.useState(false);

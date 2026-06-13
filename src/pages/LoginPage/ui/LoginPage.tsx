@@ -1,12 +1,11 @@
 import React from 'react';
-import { authApi, useLoginMutation } from '../../api/authApi';
-import { AuthForm } from '../../components/AuthForm';
-import { useAppDispatch } from '../../hooks';
-import type { AuthRequest } from '../../types/authTypes';
-
-import s from './LoginPage.module.css';
 import { useNavigate } from 'react-router-dom';
-import { getErrorMessage } from '../../utils/getErrorMessage';
+import { authApi, useLoginMutation } from '../../../api/authApi';
+import { AuthForm } from '../../../components/AuthForm';
+import { useAppDispatch } from '../../../hooks';
+import type { AuthRequest } from '../../../types/authTypes';
+import { getErrorMessage } from '../../../utils/getErrorMessage';
+import s from './LoginPage.module.css';
 
 export const LoginPage = () => {
   const navigate = useNavigate();

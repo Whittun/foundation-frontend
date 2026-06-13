@@ -1,4 +1,4 @@
-import type { AppDispatch } from '../store';
+import type { AppDispatch } from '../app/store/store';
 
 import { authApi } from '../api/authApi';
 import { habitsApi } from '../api/habitsApi';

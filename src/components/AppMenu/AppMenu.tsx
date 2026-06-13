@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import s from './AppMenu.module.css';
-import { CalendarDays, ChartNoAxesColumnIncreasing, Flag, Map } from 'lucide-react';
+import { CalendarDays, ChartNoAxesColumnIncreasing, Map } from 'lucide-react';
 import clsx from 'clsx';
 import { AuthenticatedUser } from '../AuthenticatedUser';
 

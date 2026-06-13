@@ -1,18 +1,15 @@
-import './App.css';
-import './variables.css';
-
 import { Route, Routes } from 'react-router-dom';
-import { YearTrackerPage } from './pages/YearTrackerPage';
-import { AppLayout } from './layout';
-import { Habits } from './components/Habits';
-import { HabitsPage } from './pages/HabitsPage';
-import { HabitsIndex } from './components/HabitsIndex';
-import { ObjectivesPage } from './pages/ObjectivesPage';
-import { RegisterPage } from './pages/RegisterPage';
-import { LoginPage } from './pages/LoginPage';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ProtectedRoute } from './ProtectedRoute';
+import { AppLayout } from '../../layout';
+import { YearTrackerPage } from '../../pages/YearTrackerPage';
+import { HabitsPage } from '../../pages/HabitsPage';
+import { HabitsIndex } from '../../components/HabitsIndex';
+import { Habits } from '../../components/Habits';
+import { ObjectivesPage } from '../../pages/ObjectivesPage';
+import { RegisterPage } from '../../pages/RegisterPage';
+import { LoginPage } from '../../pages/LoginPage';
 
-function App() {
+export const AppRouter = () => {
   return (
     <Routes>
       <Route element={<ProtectedRoute />}>
@@ -26,10 +23,9 @@ function App() {
           <Route path="/objectives" element={<ObjectivesPage />} />
         </Route>
       </Route>
+
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
     </Routes>
   );
-}
-
-export default App;
+};

@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { dayRatingsApi } from './api/dayRatingsApi';
-import { habitsApi } from './api/habitsApi';
-import { objectivesApi } from './api/objectivesApi';
-import { authApi } from './api/authApi';
+import { dayRatingsApi } from '../../api/dayRatingsApi';
+import { habitsApi } from '../../api/habitsApi';
+import { objectivesApi } from '../../api/objectivesApi';
+import { authApi } from '../../api/authApi';
 
 export const store = configureStore({
   reducer: {

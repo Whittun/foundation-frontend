@@ -1,1 +1,1 @@
-export { YearTrackerPage } from './YearTrackerPage';
+export { YearTrackerPage } from './ui/YearTrackerPage';
