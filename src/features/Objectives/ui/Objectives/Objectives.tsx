@@ -1,35 +1,35 @@
-import React from 'react';
 import {
-  ReactFlow,
+  addEdge,
+  applyEdgeChanges,
   applyNodeChanges,
   Background,
   BackgroundVariant,
-  applyEdgeChanges,
-  addEdge,
-  MiniMap,
   Controls,
-  useReactFlow,
-  type XYPosition,
-  type OnNodesChange,
-  type OnEdgesChange,
-  type OnConnect,
   getNodesBounds,
-  type NodeChange,
+  MiniMap,
+  ReactFlow,
+  useReactFlow,
   type EdgeChange,
+  type NodeChange,
+  type OnConnect,
+  type OnEdgesChange,
+  type OnNodesChange,
+  type XYPosition,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import React from 'react';
 
-import s from './Objectives.module.css';
 import clsx from 'clsx';
-import { ObjectiveNode } from './components/ObjectiveNode';
+import { Plus } from 'lucide-react';
+import { useAppDispatch } from '../../../../shared/hooks';
 import {
   objectivesApi,
   useGetObjectivesGraphQuery,
   useSaveObjectivesGraphMutation,
 } from '../../api/objectivesApi';
-import { useAppDispatch } from '../../hooks';
-import { ObjectiveNodeActionsProvider } from './ObjectiveNodeActionsContext';
-import { Plus } from 'lucide-react';
+import { ObjectiveNodeActionsProvider } from '../../model/ObjectiveNodeActionsContext';
+import { ObjectiveNode } from '../ObjectiveNode/ObjectiveNode';
+import s from './Objectives.module.css';
 
 type ObjectiveFlowNode = {
   id: string;
@@ -176,7 +176,7 @@ export const Objectives = () => {
 
   const handlePaneClick = (event: React.MouseEvent) => {
     if (isCreateMode) {
-      const newNode = {
+      const newNode: ObjectiveFlowNode = {
         id: crypto.randomUUID(),
         position: screenToFlowPosition({ x: event.clientX, y: event.clientY }),
         data: { label: 'New node', completed: false },
@@ -231,7 +231,7 @@ export const Objectives = () => {
 
         const idNodesMap: Record<string, string> = {};
 
-        const newNodes = clipboardGraph.nodes.map((clipboardNode) => {
+        const newNodes: ObjectiveFlowNode[] = clipboardGraph.nodes.map((clipboardNode) => {
           const relativeX = clipboardNode.position.x - groupCenterX;
           const relativeY = clipboardNode.position.y - groupCenterY;
 

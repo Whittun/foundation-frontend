@@ -1,10 +1,10 @@
-export { AuthForm } from './ui/AuthForm';
 export {
   authApi,
   useLoginMutation,
-  useRegisterMutation,
-  useMeQuery,
   useLogoutMutation,
+  useMeQuery,
+  useRegisterMutation,
 } from './api/authApi';
+export { AuthForm } from './ui/AuthForm';
 
 export type { AuthRequest, AuthResponse } from './model/authTypes';

@@ -1,7 +1,6 @@
 import { clsx } from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
-import { RatingPicker } from '../RatingPicker/RatingPicker';
 import {
   useDeleteDayRatingMutation,
   useGetYearRatingsQuery,
@@ -10,6 +9,7 @@ import {
 import { monthsNames, weekDays } from '../../lib/consts';
 import { getCalendarMonths } from '../../lib/getCalendarMonths';
 import type { DayRating } from '../../model/types';
+import { RatingPicker } from '../RatingPicker/RatingPicker';
 import s from './YearTracker.module.css';
 
 export const YearTracker = () => {

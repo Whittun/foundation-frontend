@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthForm, authApi, type AuthRequest, useLoginMutation } from '../../../features/Auth';
-import { useAppDispatch } from '../../../hooks';
-import { getErrorMessage } from '../../../utils/getErrorMessage';
+import { AuthForm, authApi, useLoginMutation, type AuthRequest } from '../../../features/Auth';
+import { useAppDispatch } from '../../../shared/hooks';
+import { getErrorMessage } from '../../../shared/lib';
 import s from './LoginPage.module.css';
 
 export const LoginPage = () => {

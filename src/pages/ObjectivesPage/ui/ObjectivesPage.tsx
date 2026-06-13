@@ -1,5 +1,5 @@
 import { ReactFlowProvider } from '@xyflow/react';
-import { Objectives } from '../../../components/Objectives';
+import { Objectives } from '../../../features/Objectives';
 
 export const ObjectivesPage = () => {
   return (

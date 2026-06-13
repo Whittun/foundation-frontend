@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { useLogoutMutation, useMeQuery } from '../../features/Auth';
+import { resetUserSessionCache } from '../../../../app/store/resetUserSessionCache';
+import { useLogoutMutation, useMeQuery } from '../../../../features/Auth';
 
-import { useAppDispatch } from '../../hooks';
-import { resetUserSessionCache } from '../../utils/resetUserSessionCache';
-import s from './AuthenticatedUser.module.css';
+import { useAppDispatch } from '../../../../shared/hooks';
+import s from './UserMenu.module.css';
 
-export const AuthenticatedUser = () => {
+export const UserMenu = () => {
   const { data, isError } = useMeQuery();
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();

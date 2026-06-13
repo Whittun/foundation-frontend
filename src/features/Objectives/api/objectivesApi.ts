@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-import type { ObjectivesGraph } from '../types/objectivesTypes';
+import type { ObjectivesGraph } from '../model/types';
 
 export const objectivesApi = createApi({
   reducerPath: 'objectivesApi',

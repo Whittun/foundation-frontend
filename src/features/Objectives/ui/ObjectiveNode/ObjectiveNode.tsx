@@ -2,10 +2,10 @@ import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import s from './ObjectiveNode.module.css';
 
 import clsx from 'clsx';
-import React from 'react';
 import { Check, CornerDownLeft } from 'lucide-react';
-import { CompletedTag } from '../../../../shared/CompletedTag';
-import { useObjectiveNodeActions } from '../../ObjectiveNodeActionsContext';
+import React from 'react';
+import { CompletedTag } from '../../../../shared/ui/CompletedTag';
+import { useObjectiveNodeActions } from '../../model/ObjectiveNodeActionsContext';
 
 type ObjectiveNodeData = {
   label: string;

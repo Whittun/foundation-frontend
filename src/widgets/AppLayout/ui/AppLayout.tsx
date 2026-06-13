@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
+import { AppMenu } from '../../AppMenu';
 import s from './AppLayout.module.css';
-import { AppMenu } from '../components/AppMenu';
 
 export const AppLayout = () => {
   return (

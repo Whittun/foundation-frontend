@@ -1,17 +1,17 @@
 import clsx from 'clsx';
-import s from './Habits.module.css';
 import { Plus, SquarePen, Trash } from 'lucide-react';
+import React from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { CompletedTag } from '../../../../shared/ui/CompletedTag';
 import {
   useCreateHabitLevelMutation,
   useDeleteHabitLevelMutation,
   useGetHabitLevelsByHabitQuery,
   useUpdateHabitLevelMutation,
 } from '../../api/habitsApi';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import React from 'react';
 import type { DraftInputsValues, UpdateHabitLevelArgs } from '../../model/types';
-import { CompletedTag } from '../../../../shared/CompletedTag';
 import { HabitLevelForm } from '../HabitLevelForm/HabitLevelForm';
+import s from './Habits.module.css';
 
 export const Habits = () => {
   const [habitLevelFormState, setHabitLevelFormState] = React.useState<{

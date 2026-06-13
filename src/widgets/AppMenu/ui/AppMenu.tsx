@@ -1,8 +1,8 @@
+import clsx from 'clsx';
+import { CalendarDays, ChartNoAxesColumnIncreasing, Map } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import s from './AppMenu.module.css';
-import { CalendarDays, ChartNoAxesColumnIncreasing, Map } from 'lucide-react';
-import clsx from 'clsx';
-import { AuthenticatedUser } from '../AuthenticatedUser';
+import { UserMenu } from './UserMenu';
 
 export const AppMenu = () => {
   return (
@@ -37,7 +37,7 @@ export const AppMenu = () => {
           </NavLink>
         </li>
       </ul>
-      <AuthenticatedUser />
+      <UserMenu />
     </div>
   );
 };

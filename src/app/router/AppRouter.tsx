@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
-import { AppLayout } from '../../layout';
+import { AppLayout } from '../../widgets/AppLayout';
 import { YearTrackerPage } from '../../pages/YearTrackerPage';
 import { HabitsPage } from '../../pages/HabitsPage';
 import { Habits, HabitsIndex } from '../../features/Habits';
