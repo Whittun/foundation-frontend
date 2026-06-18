@@ -1,12 +1,12 @@
+import { Habits, HabitsIndex } from '@/features/Habits';
+import { HabitsPage } from '@/pages/HabitsPage';
+import { LoginPage } from '@/pages/LoginPage';
+import { ObjectivesPage } from '@/pages/ObjectivesPage';
+import { RegisterPage } from '@/pages/RegisterPage';
+import { YearTrackerPage } from '@/pages/YearTrackerPage';
+import { AppLayout } from '@/widgets/AppLayout';
 import { Route, Routes } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
-import { AppLayout } from '../../widgets/AppLayout';
-import { YearTrackerPage } from '../../pages/YearTrackerPage';
-import { HabitsPage } from '../../pages/HabitsPage';
-import { Habits, HabitsIndex } from '../../features/Habits';
-import { ObjectivesPage } from '../../pages/ObjectivesPage';
-import { RegisterPage } from '../../pages/RegisterPage';
-import { LoginPage } from '../../pages/LoginPage';
 
 export const AppRouter = () => {
   return (

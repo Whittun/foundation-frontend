@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { AuthForm, type AuthRequest, useRegisterMutation } from '../../../features/Auth';
-import { getErrorMessage } from '../../../shared/lib';
+import { AuthForm, type AuthRequest, useRegisterMutation } from '@/features/Auth';
+import { getErrorMessage } from '@/shared/lib';
 
 import React from 'react';
 import s from './RegisterPage.module.css';

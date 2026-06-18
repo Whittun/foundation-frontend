@@ -21,13 +21,13 @@ import React from 'react';
 
 import clsx from 'clsx';
 import { Plus } from 'lucide-react';
-import { useAppDispatch } from '../../../../shared/hooks';
+import { useAppDispatch } from '@/shared/hooks';
 import {
   objectivesApi,
   useGetObjectivesGraphQuery,
   useSaveObjectivesGraphMutation,
-} from '../../api/objectivesApi';
-import { ObjectiveNodeActionsProvider } from '../../model/ObjectiveNodeActionsContext';
+} from '@/features/Objectives/api/objectivesApi';
+import { ObjectiveNodeActionsProvider } from '@/features/Objectives/model/ObjectiveNodeActionsContext';
 import { ObjectiveNode } from '../ObjectiveNode/ObjectiveNode';
 import s from './Objectives.module.css';
 

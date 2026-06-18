@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { useLogoutMutation, useMeQuery } from '../../../../features/Auth';
+import { useLogoutMutation, useMeQuery } from '@/features/Auth';
 
-import { baseApi } from '../../../../shared/api';
-import { useAppDispatch } from '../../../../shared/hooks';
+import { baseApi } from '@/shared/api';
+import { useAppDispatch } from '@/shared/hooks';
 import s from './UserMenu.module.css';
 
 export const UserMenu = () => {

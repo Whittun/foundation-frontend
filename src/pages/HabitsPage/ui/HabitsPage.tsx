@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { HabitsMenu } from '../../../features/Habits';
+import { HabitsMenu } from '@/features/Habits';
 import s from './HabitsPage.module.css';
 
 export const HabitsPage = () => {

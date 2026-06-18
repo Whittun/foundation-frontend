@@ -1,4 +1,4 @@
-import { baseApi } from '../../../shared/api';
+import { baseApi } from '@/shared/api';
 import type { CreateHabitLevelArgs, Habit, HabitLevel, UpdateHabitLevelArgs } from '../model/types';
 
 const HABITS_URL = '/habits';

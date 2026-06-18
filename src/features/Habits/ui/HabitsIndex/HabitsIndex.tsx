@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { EmptyHabits } from '../EmptyHabits/EmptyHabits';
-import { useGetAllHabitsQuery } from '../../api/habitsApi';
+import { useGetAllHabitsQuery } from '@/features/Habits/api/habitsApi';
 
 export const HabitsIndex = () => {
   const { data, isSuccess } = useGetAllHabitsQuery();

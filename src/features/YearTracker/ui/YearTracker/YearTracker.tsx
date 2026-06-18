@@ -5,10 +5,10 @@ import {
   useDeleteDayRatingMutation,
   useGetYearRatingsQuery,
   useSetDayRatingMutation,
-} from '../../api/dayRatingsApi';
-import { monthsNames, weekDays } from '../../lib/consts';
-import { getCalendarMonths } from '../../lib/getCalendarMonths';
-import type { DayRating } from '../../model/types';
+} from '@/features/YearTracker/api/dayRatingsApi';
+import { monthsNames, weekDays } from '@/features/YearTracker/lib/consts';
+import { getCalendarMonths } from '@/features/YearTracker/lib/getCalendarMonths';
+import type { DayRating } from '@/features/YearTracker/model/types';
 import { RatingPicker } from '../RatingPicker/RatingPicker';
 import s from './YearTracker.module.css';
 

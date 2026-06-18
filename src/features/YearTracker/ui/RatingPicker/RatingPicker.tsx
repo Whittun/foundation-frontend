@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Eraser } from 'lucide-react';
-import type { DayRating } from '../../model/types';
+import type { DayRating } from '@/features/YearTracker/model/types';
 import s from './RatingPicker.module.css';
 
 type RatingPickerProps = {

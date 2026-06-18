@@ -1,4 +1,4 @@
-import { baseApi } from '../../../shared/api';
+import { baseApi } from '@/shared/api';
 import type { DayRating, DayRatingData, YearMap } from '../model/types';
 
 const DAY_RATING_URL = '/day-ratings';

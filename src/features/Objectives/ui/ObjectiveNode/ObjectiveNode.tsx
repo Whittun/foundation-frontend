@@ -4,8 +4,8 @@ import s from './ObjectiveNode.module.css';
 import clsx from 'clsx';
 import { Check, CornerDownLeft } from 'lucide-react';
 import React from 'react';
-import { CompletedTag } from '../../../../shared/ui/CompletedTag';
-import { useObjectiveNodeActions } from '../../model/ObjectiveNodeActionsContext';
+import { CompletedTag } from '@/shared/ui/CompletedTag';
+import { useObjectiveNodeActions } from '@/features/Objectives/model/ObjectiveNodeActionsContext';
 
 type ObjectiveNodeData = {
   label: string;

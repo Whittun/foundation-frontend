@@ -1,4 +1,4 @@
-import { baseApi } from '../../../shared/api';
+import { baseApi } from '@/shared/api';
 import type { AuthRequest, AuthResponse } from '../model/authTypes';
 
 const AUTH_URL = '/auth';

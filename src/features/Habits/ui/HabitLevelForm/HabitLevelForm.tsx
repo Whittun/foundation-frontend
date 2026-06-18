@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
-import type { DraftInputsValues } from '../../model/types';
+import type { DraftInputsValues } from '@/features/Habits/model/types';
 import s from './HabitLevelForm.module.css';
 
 type HabitLevelFormProps = {

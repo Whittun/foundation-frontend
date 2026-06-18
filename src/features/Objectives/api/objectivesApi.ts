@@ -1,4 +1,4 @@
-import { baseApi } from '../../../shared/api';
+import { baseApi } from '@/shared/api';
 import type { ObjectivesGraph } from '../model/types';
 
 const OBJECTIVES_URL = '/objectives';

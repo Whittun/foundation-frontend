@@ -2,14 +2,14 @@ import clsx from 'clsx';
 import { Plus, SquarePen, Trash } from 'lucide-react';
 import React from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { CompletedTag } from '../../../../shared/ui/CompletedTag';
+import { CompletedTag } from '@/shared/ui/CompletedTag';
 import {
   useCreateHabitLevelMutation,
   useDeleteHabitLevelMutation,
   useGetHabitLevelsByHabitQuery,
   useUpdateHabitLevelMutation,
-} from '../../api/habitsApi';
-import type { DraftInputsValues, UpdateHabitLevelArgs } from '../../model/types';
+} from '@/features/Habits/api/habitsApi';
+import type { DraftInputsValues, UpdateHabitLevelArgs } from '@/features/Habits/model/types';
 import { HabitLevelForm } from '../HabitLevelForm/HabitLevelForm';
 import s from './Habits.module.css';
 

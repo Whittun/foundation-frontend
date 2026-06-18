@@ -6,7 +6,7 @@ import {
   useDeleteHabitMutation,
   useGetAllHabitsQuery,
   useUpdateHabitMutation,
-} from '../../api/habitsApi';
+} from '@/features/Habits/api/habitsApi';
 import clsx from 'clsx';
 import { SquarePen, Trash } from 'lucide-react';
 
