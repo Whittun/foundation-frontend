@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { resetUserSessionCache } from '../../../../app/store/resetUserSessionCache';
 import { useLogoutMutation, useMeQuery } from '../../../../features/Auth';
 
+import { baseApi } from '../../../../shared/api';
 import { useAppDispatch } from '../../../../shared/hooks';
 import s from './UserMenu.module.css';
 
@@ -18,7 +18,9 @@ export const UserMenu = () => {
   const logoutHandler = async () => {
     try {
       await logout().unwrap();
-      resetUserSessionCache(dispatch);
+
+      dispatch(baseApi.util.resetApiState());
+
       navigate('/login', { replace: true });
     } catch (error) {
       console.error(error);

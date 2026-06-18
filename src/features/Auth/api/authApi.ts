@@ -1,37 +1,33 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseApi } from '../../../shared/api';
 import type { AuthRequest, AuthResponse } from '../model/authTypes';
 
-export const authApi = createApi({
-  reducerPath: 'AuthApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/auth/',
-    credentials: 'include',
-  }),
+const AUTH_URL = '/auth';
 
+export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation<AuthResponse, AuthRequest>({
       query: (userData: AuthRequest) => ({
-        url: '/login',
+        url: `${AUTH_URL}/login`,
         method: 'POST',
         body: userData,
       }),
     }),
     register: builder.mutation<AuthResponse, AuthRequest>({
       query: (userData: AuthRequest) => ({
-        url: '/register',
+        url: `${AUTH_URL}/register`,
         method: 'POST',
         body: userData,
       }),
     }),
     me: builder.query<AuthResponse, void>({
       query: () => ({
-        url: '/me',
+        url: `${AUTH_URL}/me`,
       }),
     }),
 
     logout: builder.mutation<{ success: boolean }, void>({
       query: () => ({
-        url: '/logout',
+        url: `${AUTH_URL}/logout`,
         method: 'POST',
       }),
     }),

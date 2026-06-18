@@ -1,27 +1,20 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-
+import { baseApi } from '../../../shared/api';
 import type { ObjectivesGraph } from '../model/types';
 
-export const objectivesApi = createApi({
-  reducerPath: 'objectivesApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/objectives',
-    credentials: 'include',
-  }),
+const OBJECTIVES_URL = '/objectives';
 
-  tagTypes: ['Objectives'],
-
+export const objectivesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getObjectivesGraph: builder.query<ObjectivesGraph, void>({
       query: () => ({
-        url: '/graph',
+        url: `${OBJECTIVES_URL}/graph`,
       }),
       providesTags: ['Objectives'],
     }),
 
     saveObjectivesGraph: builder.mutation<ObjectivesGraph, ObjectivesGraph>({
       query: (body) => ({
-        url: `/graph`,
+        url: `${OBJECTIVES_URL}/graph`,
         method: 'PUT',
         body,
       }),

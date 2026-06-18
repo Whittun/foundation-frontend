@@ -1,23 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { authApi } from '../../features/Auth';
-import { habitsApi } from '../../features/Habits';
-import { objectivesApi } from '../../features/Objectives';
-import { dayRatingsApi } from '../../features/YearTracker';
+import { baseApi } from '../../shared/api';
 
 export const store = configureStore({
   reducer: {
-    [dayRatingsApi.reducerPath]: dayRatingsApi.reducer,
-    [habitsApi.reducerPath]: habitsApi.reducer,
-    [objectivesApi.reducerPath]: objectivesApi.reducer,
-    [authApi.reducerPath]: authApi.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
-      dayRatingsApi.middleware,
-      habitsApi.middleware,
-      objectivesApi.middleware,
-      authApi.middleware,
-    ),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(baseApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

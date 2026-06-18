@@ -1,30 +1,19 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type {
-  CreateHabitLevelArgs,
-  Habit,
-  HabitLevel,
-  UpdateHabitLevelArgs,
-} from '../model/types';
+import { baseApi } from '../../../shared/api';
+import type { CreateHabitLevelArgs, Habit, HabitLevel, UpdateHabitLevelArgs } from '../model/types';
 
-export const habitsApi = createApi({
-  reducerPath: 'habitsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000/habits',
-    credentials: 'include',
-  }),
+const HABITS_URL = '/habits';
 
-  tagTypes: ['Habits', 'HabitLevels'],
-
+export const habitsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllHabits: builder.query<Habit[], void>({
       query: () => ({
-        url: '',
+        url: HABITS_URL,
       }),
       providesTags: ['Habits'],
     }),
     updateHabit: builder.mutation<Habit, { habitId: number; name: string }>({
       query: ({ habitId, name }) => ({
-        url: `/${habitId}`,
+        url: `${HABITS_URL}/${habitId}`,
         method: 'PATCH',
         body: {
           name,
@@ -34,7 +23,7 @@ export const habitsApi = createApi({
     }),
     createHabit: builder.mutation<Habit, { name: string }>({
       query: ({ name }) => ({
-        url: ``,
+        url: HABITS_URL,
         method: 'POST',
         body: {
           name,
@@ -44,20 +33,20 @@ export const habitsApi = createApi({
     }),
     deleteHabit: builder.mutation<{ deleted: boolean }, { habitId: number }>({
       query: ({ habitId }) => ({
-        url: `/${habitId}`,
+        url: `${HABITS_URL}/${habitId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Habits'],
     }),
     getHabitLevelsByHabit: builder.query<HabitLevel[], { habitId: number }>({
       query: ({ habitId }) => ({
-        url: `/${habitId}/levels`,
+        url: `${HABITS_URL}/${habitId}/levels`,
       }),
       providesTags: ['HabitLevels'],
     }),
     updateHabitLevel: builder.mutation<HabitLevel, UpdateHabitLevelArgs>({
       query: ({ habitLevelId, ...body }) => ({
-        url: `/levels/${habitLevelId}`,
+        url: `${HABITS_URL}/levels/${habitLevelId}`,
         method: 'PATCH',
         body,
       }),
@@ -65,7 +54,7 @@ export const habitsApi = createApi({
     }),
     createHabitLevel: builder.mutation<HabitLevel, CreateHabitLevelArgs>({
       query: ({ habitId, ...body }) => ({
-        url: `/${habitId}/levels`,
+        url: `${HABITS_URL}/${habitId}/levels`,
         method: 'POST',
         body,
       }),
@@ -74,7 +63,7 @@ export const habitsApi = createApi({
 
     deleteHabitLevel: builder.mutation<{ deleted: boolean }, { habitLevelId: number }>({
       query: ({ habitLevelId }) => ({
-        url: `/levels/${habitLevelId}`,
+        url: `${HABITS_URL}/levels/${habitLevelId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['HabitLevels'],

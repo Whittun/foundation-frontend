@@ -1,19 +1,13 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseApi } from '../../../shared/api';
 import type { DayRating, DayRatingData, YearMap } from '../model/types';
 
-export const dayRatingsApi = createApi({
-  reducerPath: 'dayRatingsApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3000',
-    credentials: 'include',
-  }),
+const DAY_RATING_URL = '/day-ratings';
 
-  tagTypes: ['YearRatings'],
-
+export const dayRatingsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getYearRatings: builder.query<YearMap, number>({
       query: (year: number) => ({
-        url: '/day-ratings',
+        url: DAY_RATING_URL,
         params: {
           year,
         },
@@ -23,7 +17,7 @@ export const dayRatingsApi = createApi({
     }),
     setDayRating: builder.mutation<DayRatingData, { date: string; rating: DayRating }>({
       query: ({ date, rating }) => ({
-        url: '/day-ratings',
+        url: DAY_RATING_URL,
         method: 'PATCH',
         body: {
           date,
@@ -35,7 +29,7 @@ export const dayRatingsApi = createApi({
     }),
     deleteDayRating: builder.mutation<{ deleted: boolean }, { date: string }>({
       query: ({ date }) => ({
-        url: '/day-ratings',
+        url: DAY_RATING_URL,
         method: 'DELETE',
         body: {
           date,
