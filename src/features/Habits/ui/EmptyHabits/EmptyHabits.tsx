@@ -1,5 +1,5 @@
 import { ChartNoAxesColumnIncreasing } from 'lucide-react';
-import s from './emptyHabits.module.css';
+import s from './EmptyHabits.module.css';
 import { useOutletContext } from 'react-router-dom';
 
 type HabitsOutletContext = {
