@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import type { AuthRequest } from '../model/authTypes';
 import s from './AuthForm.module.css';
 
@@ -8,9 +9,16 @@ type AuthFormProps = {
   serverError?: string | null;
   sendData: (data: AuthRequest) => void;
   isLoading: boolean;
+  mode?: 'login' | 'register';
 };
 
-export const AuthForm = ({ title, sendData, serverError, isLoading }: AuthFormProps) => {
+export const AuthForm = ({
+  title,
+  sendData,
+  serverError,
+  isLoading,
+  mode = 'login',
+}: AuthFormProps) => {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [isTouchedPassword, setIsTouchedPassword] = React.useState<boolean>(false);
@@ -95,6 +103,22 @@ export const AuthForm = ({ title, sendData, serverError, isLoading }: AuthFormPr
         >
           {isLoading ? 'Loading...' : 'Send'}
         </button>
+        {mode === 'login' && (
+          <p className={s.linkText}>
+            Don't you have an account?{' '}
+            <Link className={s.link} to={'/register'}>
+              Sign up
+            </Link>
+          </p>
+        )}
+        {mode === 'register' && (
+          <p className={s.linkText}>
+            Do you already have an account?{' '}
+            <Link className={s.link} to={'/login'}>
+              Log in
+            </Link>
+          </p>
+        )}
       </form>
     </div>
   );
