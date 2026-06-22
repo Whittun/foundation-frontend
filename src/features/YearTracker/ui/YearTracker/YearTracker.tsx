@@ -10,6 +10,7 @@ import { clsx } from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
 import { DayPopover } from '../DayPopover/DayPopover';
+import { DayNoteModal } from '../DayNoteModal';
 import s from './YearTracker.module.css';
 
 export const YearTracker = () => {
@@ -20,6 +21,7 @@ export const YearTracker = () => {
   const [deleteDayRating] = useDeleteDayRatingMutation();
 
   const [activeDate, setActiveDate] = React.useState<string | null>(null);
+  const [isNoteModalOpen, setIsNoteModalOpen] = React.useState(false);
 
   const popoverRef = React.useRef<HTMLDivElement>(null);
 
@@ -84,6 +86,14 @@ export const YearTracker = () => {
     deleteDayRating({ date: activeDate });
   };
 
+  const handleOpenNoteModal = () => {
+    setIsNoteModalOpen(true);
+  };
+
+  const handleCloseNoteModal = () => {
+    setIsNoteModalOpen(false);
+  };
+
   const handleCurrentYear = (direction: 'back' | 'next') => {
     if (direction === 'next') {
       setCurrentYear((prevYear) => {
@@ -141,10 +151,11 @@ export const YearTracker = () => {
                       }}
                     >
                       {activeDate === date && (
-                        <div ref={popoverRef}>
+                        <div ref={popoverRef} onClick={(event) => event.stopPropagation()}>
                           <DayPopover
                             removeRating={handleRemoveRating}
                             addRating={handlePickRating}
+                            openNote={handleOpenNoteModal}
                           />
                         </div>
                       )}
@@ -157,6 +168,7 @@ export const YearTracker = () => {
           );
         })}
       </div>
+      <DayNoteModal isOpen={isNoteModalOpen} onClose={handleCloseNoteModal} />
     </React.Fragment>
   );
 };

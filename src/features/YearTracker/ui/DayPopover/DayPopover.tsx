@@ -5,15 +5,12 @@ import s from './DayPopover.module.css';
 
 type DayPopoverProps = {
   addRating: (ratingVariant: DayRating) => void;
+  openNote: () => void;
   removeRating: () => void;
 };
 
-export const DayPopover = ({ addRating, removeRating }: DayPopoverProps) => {
+export const DayPopover = ({ addRating, openNote, removeRating }: DayPopoverProps) => {
   const ratingVariants: DayRating[] = [1, 2, 3, 4, 5];
-
-  const noteHandler = () => {
-    console.log('yes');
-  };
 
   return (
     <div className={s.root}>
@@ -34,7 +31,7 @@ export const DayPopover = ({ addRating, removeRating }: DayPopoverProps) => {
         </button>
       </div>
 
-      <button onClick={noteHandler} className={s.noteButton}>
+      <button onClick={openNote} className={s.noteButton}>
         Add note
       </button>
     </div>
