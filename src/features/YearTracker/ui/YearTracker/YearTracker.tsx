@@ -1,6 +1,3 @@
-import { clsx } from 'clsx';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import React from 'react';
 import {
   useDeleteDayRatingMutation,
   useGetYearRatingsQuery,
@@ -9,7 +6,10 @@ import {
 import { monthsNames, weekDays } from '@/features/YearTracker/lib/consts';
 import { getCalendarMonths } from '@/features/YearTracker/lib/getCalendarMonths';
 import type { DayRating } from '@/features/YearTracker/model/types';
-import { RatingPicker } from '../RatingPicker/RatingPicker';
+import { clsx } from 'clsx';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React from 'react';
+import { DayPopover } from '../DayPopover/DayPopover';
 import s from './YearTracker.module.css';
 
 export const YearTracker = () => {
@@ -142,7 +142,7 @@ export const YearTracker = () => {
                     >
                       {activeDate === date && (
                         <div ref={popoverRef}>
-                          <RatingPicker
+                          <DayPopover
                             removeRating={handleRemoveRating}
                             addRating={handlePickRating}
                           />
