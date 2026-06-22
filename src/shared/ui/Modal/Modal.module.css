@@ -14,9 +14,9 @@
 .content {
   position: relative;
 
-  width: min(100%, 520px);
+  width: min(100%, 760px);
   min-height: 220px;
-  padding: 40px 24px 24px;
+  padding: 50px 30px 20px 30px;
 
   color: #ffffff;
 

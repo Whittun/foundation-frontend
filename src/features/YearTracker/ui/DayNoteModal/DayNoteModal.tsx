@@ -1,4 +1,9 @@
 import { Modal } from '@/shared/ui/Modal';
+import React from 'react';
+import { DayNoteEditor } from './DayNoteEditor';
+import { DayNoteViewer } from './DayNoteViewer';
+
+type DayNoteModalMode = 'edit' | 'view';
 
 type DayNoteModalProps = {
   isOpen: boolean;
@@ -6,9 +11,11 @@ type DayNoteModalProps = {
 };
 
 export const DayNoteModal = ({ isOpen, onClose }: DayNoteModalProps) => {
+  const [mode] = React.useState<DayNoteModalMode>('view');
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      {null}
+      {mode === 'edit' ? <DayNoteEditor /> : <DayNoteViewer />}
     </Modal>
   );
 };

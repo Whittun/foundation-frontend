@@ -1,0 +1,52 @@
+.root {
+  min-height: 280px;
+}
+
+.viewer {
+  :global(.tiptap) {
+    min-height: 220px;
+    max-height: calc(100vh - 180px);
+    overflow-y: auto;
+    scrollbar-color: rgb(255 255 255 / 45%) transparent;
+    scrollbar-width: thin;
+
+    color: #ffffff;
+
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  :global(.tiptap::-webkit-scrollbar) {
+    width: 8px;
+  }
+
+  :global(.tiptap::-webkit-scrollbar-track) {
+    background-color: transparent;
+  }
+
+  :global(.tiptap::-webkit-scrollbar-thumb) {
+    background-color: rgb(255 255 255 / 38%);
+    border-radius: 999px;
+  }
+
+  :global(.tiptap::-webkit-scrollbar-thumb:hover) {
+    background-color: rgb(255 255 255 / 58%);
+  }
+
+  :global(.tiptap p) {
+    margin: 0 0 8px;
+  }
+
+  :global(.tiptap h2) {
+    margin: 0 0 10px;
+    font-size: 22px;
+  }
+
+  :global(.tiptap ul),
+  :global(.tiptap ol) {
+    margin: 0 0 8px;
+    padding-left: 24px;
+  }
+}
