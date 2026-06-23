@@ -1,4 +1,5 @@
-import { EditorContent, type JSONContent, useEditor, useEditorState } from '@tiptap/react';
+import type { JSONContent } from '@tiptap/core';
+import { EditorContent, useEditor, useEditorState } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import clsx from 'clsx';
 import { Bold, Heading2, Italic, List, ListOrdered } from 'lucide-react';
@@ -6,14 +7,18 @@ import s from './DayNoteEditor.module.css';
 
 type DayNoteEditorProps = {
   content: JSONContent;
+  onContentChange: (content: JSONContent) => void;
 };
 
-export const DayNoteEditor = ({ content }: DayNoteEditorProps) => {
+export const DayNoteEditor = ({ content, onContentChange }: DayNoteEditorProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
     content,
     editable: true,
     immediatelyRender: false,
+    onUpdate: ({ editor }) => {
+      onContentChange(editor.getJSON());
+    },
   });
 
   const editorState = useEditorState({

@@ -168,7 +168,7 @@ export const YearTracker = () => {
           );
         })}
       </div>
-      <DayNoteModal isOpen={isNoteModalOpen} onClose={handleCloseNoteModal} />
+      <DayNoteModal date={activeDate} isOpen={isNoteModalOpen} onClose={handleCloseNoteModal} />
     </React.Fragment>
   );
 };

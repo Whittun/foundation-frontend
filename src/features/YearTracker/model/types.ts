@@ -1,3 +1,5 @@
+import type { JSONContent } from '@tiptap/core';
+
 export type DayRating = 1 | 2 | 3 | 4 | 5;
 export type YearMap = Record<string, DayRating | null>;
 export type DayRatingData = {
@@ -5,6 +7,15 @@ export type DayRatingData = {
   userId: number;
   date: string;
   rating: DayRating;
+};
+
+export type DayNoteData = {
+  id: number;
+  userId: number;
+  date: string;
+  contentJson: JSONContent;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type CalendarDay = string | null;
