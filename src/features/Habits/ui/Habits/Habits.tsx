@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { Plus, SquarePen, Trash } from 'lucide-react';
 import React from 'react';
+import { flushSync } from 'react-dom';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { CompletedTag } from '@/shared/ui/CompletedTag';
 import {
@@ -39,16 +40,27 @@ export const Habits = () => {
 
   const navigate = useNavigate();
 
+  const setFormState = (nextState: { type: string; id?: number } | null) => {
+    if (!document.startViewTransition) {
+      setHabitLevelFormState(nextState);
+      return;
+    }
+
+    document.startViewTransition(() => {
+      flushSync(() => setHabitLevelFormState(nextState));
+    });
+  };
+
   const createOpenHandler = () => {
-    setHabitLevelFormState({ type: 'create' });
+    setFormState({ type: 'create' });
   };
 
   const cancelHandler = () => {
-    setHabitLevelFormState(null);
+    setFormState(null);
   };
 
   const editHandler = (habitLevelId: number) => {
-    setHabitLevelFormState({ type: 'edit', id: habitLevelId });
+    setFormState({ type: 'edit', id: habitLevelId });
   };
 
   const createHabitLevelHandler = async (inputsValues: DraftInputsValues) => {
@@ -71,7 +83,7 @@ export const Habits = () => {
         habitId: numericHabitId,
       }).unwrap();
 
-      setHabitLevelFormState(null);
+      setFormState(null);
     } catch (error) {
       if (typeof error === 'object' && error !== null && 'data' in error) {
         const errorData = error.data as { message: string };
@@ -99,7 +111,7 @@ export const Habits = () => {
       target: inputsValues.targetValue,
     });
 
-    setHabitLevelFormState(null);
+    setFormState(null);
   };
 
   const updateHabitProgress = (updateArgs: UpdateHabitLevelArgs) => {
@@ -139,7 +151,14 @@ export const Habits = () => {
             habitLevel.id === habitLevelFormState.id;
 
           return (
-            <div className={clsx(s.habitLevel, isCompleted && s.habitLevelCompleted)}>
+            <div
+              className={clsx(
+                s.habitLevel,
+                isCompleted && s.habitLevelCompleted,
+                isEdit && s.habitLevelEditing,
+              )}
+              style={{ viewTransitionName: `habit-level-${habitLevel.id}` }}
+            >
               {!isEdit ? (
                 <React.Fragment>
                   <div className={s.upWrapper}>
@@ -218,7 +237,10 @@ export const Habits = () => {
             </div>
           );
         })}
-        <div className={clsx(s.habitLevel, s.habitCreateLevel)}>
+        <div
+          className={clsx(s.habitLevel, s.habitCreateLevel)}
+          style={{ viewTransitionName: 'habit-level-create' }}
+        >
           {habitLevelFormState && habitLevelFormState.type === 'create' ? (
             <HabitLevelForm
               cancelHandler={cancelHandler}

@@ -7,6 +7,8 @@
 }
 
 .habitLevel {
+  position: relative;
+
   display: flex;
   flex-direction: column;
   min-height: 220px;
@@ -22,6 +24,39 @@
       opacity: 1;
     }
   }
+}
+
+.habitLevelEditing {
+  z-index: 1;
+
+  > form {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    padding: 10px;
+
+    box-sizing: border-box;
+    border-radius: 15px;
+    background-color: var(--main-theme-color);
+  }
+}
+
+:global(::view-transition-group(*)) {
+  animation-duration: 180ms;
+  animation-timing-function: ease-in-out;
+}
+
+:global(::view-transition-group(habit-level-form)),
+:global(::view-transition-old(habit-level-form)) {
+  animation: none;
+}
+
+:global(::view-transition-new(habit-level-form)) {
+  animation: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 25%);
 }
 
 .upWrapper {
