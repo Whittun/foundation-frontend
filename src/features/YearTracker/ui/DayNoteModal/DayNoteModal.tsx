@@ -2,7 +2,7 @@ import { useGetDayNoteQuery, useSetDayNoteMutation } from '@/features/YearTracke
 import { formatDateTitle } from '@/shared/lib';
 import { Modal } from '@/shared/ui/Modal';
 import type { JSONContent } from '@tiptap/core';
-import { Pencil, Save } from 'lucide-react';
+import { Pencil, Save, Undo2 } from 'lucide-react';
 import React from 'react';
 import { DayNoteEditor } from './DayNoteEditor';
 import s from './DayNoteModal.module.css';
@@ -85,6 +85,11 @@ export const DayNoteModal = ({ date, isOpen, onClose }: DayNoteModalProps) => {
     setMode('view');
   };
 
+  const handleCancelEditing = () => {
+    setContent(dayNote?.contentJson ?? emptyDayNoteContent);
+    setMode('view');
+  };
+
   if (date === null) {
     return null;
   }
@@ -92,6 +97,17 @@ export const DayNoteModal = ({ date, isOpen, onClose }: DayNoteModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2 className={s.title}>{formatDateTitle(date)}</h2>
+      {isEditing && (
+        <button
+          className={`${s.modeButton} ${s.cancelButton}`}
+          onClick={handleCancelEditing}
+          type="button"
+          disabled={isFetching || isSaving || isError}
+          aria-label="Cancel editing"
+        >
+          <Undo2 />
+        </button>
+      )}
       <button
         className={s.modeButton}
         onClick={handleModeButtonClick}

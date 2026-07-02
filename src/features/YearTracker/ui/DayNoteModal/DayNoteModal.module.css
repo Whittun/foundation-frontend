@@ -39,3 +39,7 @@
     background-color: var(--accent-theme-color);
   }
 }
+
+.cancelButton {
+  right: 80px;
+}
