@@ -24,11 +24,13 @@ type DayNoteModalProps = {
 export const DayNoteModal = ({ date, isOpen, onClose }: DayNoteModalProps) => {
   const [mode, setMode] = React.useState<DayNoteModalMode>('view');
   const [content, setContent] = React.useState<JSONContent>(emptyDayNoteContent);
+  const [contentDate, setContentDate] = React.useState<string | null>(null);
 
   const {
-    data: dayNote,
+    currentData: dayNote,
     isError,
     isFetching,
+    isSuccess,
   } = useGetDayNoteQuery(date ?? '', {
     skip: !isOpen || date === null,
   });
@@ -36,25 +38,28 @@ export const DayNoteModal = ({ date, isOpen, onClose }: DayNoteModalProps) => {
   const [setDayNote, { isLoading: isSaving }] = useSetDayNoteMutation();
 
   const isEditing = mode === 'edit';
+  const isContentReady = contentDate === date;
 
   React.useEffect(() => {
-    if (!isOpen) {
+    if (!isOpen || date === null) {
       return;
     }
 
-    if (isFetching) {
+    if (isFetching || !isSuccess) {
       return;
     }
 
     if (dayNote) {
       setContent(dayNote.contentJson);
+      setContentDate(date);
       setMode('view');
       return;
     }
 
     setContent(emptyDayNoteContent);
+    setContentDate(date);
     setMode('edit');
-  }, [dayNote, isFetching, isOpen]);
+  }, [date, dayNote, isFetching, isOpen, isSuccess]);
 
   const handleContentChange = React.useCallback((updatedContent: JSONContent) => {
     setContent(updatedContent);
@@ -76,6 +81,7 @@ export const DayNoteModal = ({ date, isOpen, onClose }: DayNoteModalProps) => {
     }).unwrap();
 
     setContent(savedDayNote.contentJson);
+    setContentDate(date);
     setMode('view');
   };
 
@@ -99,10 +105,16 @@ export const DayNoteModal = ({ date, isOpen, onClose }: DayNoteModalProps) => {
       {isError && <div>error!</div>}
       {!isFetching &&
         !isError &&
+        isSuccess &&
+        isContentReady &&
         (mode === 'edit' ? (
-          <DayNoteEditor content={content} onContentChange={handleContentChange} />
+          <DayNoteEditor
+            key={`editor-${date}`}
+            content={content}
+            onContentChange={handleContentChange}
+          />
         ) : (
-          <DayNoteViewer content={content} />
+          <DayNoteViewer key={`viewer-${date}`} content={content} />
         ))}
     </Modal>
   );

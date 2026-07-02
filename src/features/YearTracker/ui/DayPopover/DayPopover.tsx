@@ -32,7 +32,7 @@ export const DayPopover = ({ addRating, openNote, removeRating }: DayPopoverProp
       </div>
 
       <button onClick={openNote} className={s.noteButton}>
-        Add note
+        Show note
       </button>
     </div>
   );

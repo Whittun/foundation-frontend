@@ -9,8 +9,8 @@ import type { DayRating } from '@/features/YearTracker/model/types';
 import { clsx } from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import React from 'react';
-import { DayPopover } from '../DayPopover/DayPopover';
 import { DayNoteModal } from '../DayNoteModal';
+import { DayPopover } from '../DayPopover/DayPopover';
 import s from './YearTracker.module.css';
 
 export const YearTracker = () => {
