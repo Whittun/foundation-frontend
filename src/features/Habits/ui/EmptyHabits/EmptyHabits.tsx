@@ -14,8 +14,8 @@ export const EmptyHabits = () => {
       <div className={s.emptyMessageWrapper}>
         <ChartNoAxesColumnIncreasing className={s.icon} />
         <p>Create your first Habit</p>
-        <button onClick={handleOpenForm} className={s.createButton}>
-          Create
+        <button type="button" onClick={handleOpenForm} className={s.createButton}>
+          Create Habit
         </button>
       </div>
     </div>

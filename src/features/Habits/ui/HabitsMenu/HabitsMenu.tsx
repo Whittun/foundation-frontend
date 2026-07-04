@@ -1,6 +1,3 @@
-import React from 'react';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import s from './HabitsMenu.module.css';
 import {
   useCreateHabitMutation,
   useDeleteHabitMutation,
@@ -9,6 +6,9 @@ import {
 } from '@/features/Habits/api/habitsApi';
 import clsx from 'clsx';
 import { Plus, SquarePen, Trash } from 'lucide-react';
+import React from 'react';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import s from './HabitsMenu.module.css';
 
 type HabitsMenuProps = {
   isShowForm: boolean;
