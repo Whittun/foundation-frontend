@@ -12,7 +12,22 @@ body {
 
   font-family: 'Nunito', sans-serif;
 
-  background-color: var(--main-theme-background);
+  background:
+    radial-gradient(
+      circle at 10% 10%,
+      color-mix(in srgb, var(--main-theme-background) 94%, white) 0%,
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 90% 90%,
+      color-mix(in srgb, var(--main-theme-color) 45%, transparent) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      color-mix(in srgb, var(--main-theme-background) 90%, transparent),
+      color-mix(in srgb, var(--main-theme-background) 90%, transparent)
+    ),
+    url('/paper.png');
 }
 
 #root {
