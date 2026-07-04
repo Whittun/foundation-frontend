@@ -1,9 +1,13 @@
 .detailRoot {
+  --habit-paper: color-mix(in srgb, var(--main-theme-background) 58%, #f4dfb4);
+  --habit-paper-edge: color-mix(in srgb, var(--main-theme-color) 70%, #3b260e);
+  --habit-ink: color-mix(in srgb, var(--main-theme-color) 38%, #20170e);
+
   display: grid;
   flex-grow: 1;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   justify-content: center;
-  gap: 10px;
+  gap: 14px;
 }
 
 .habitLevel {
@@ -12,22 +16,75 @@
   display: flex;
   flex-direction: column;
   min-height: 220px;
-  padding: 10px;
+  padding: 16px;
 
-  color: #ffffff;
+  color: var(--habit-ink);
 
-  border-radius: 15px;
-  background-color: var(--main-theme-color);
+  background:
+    linear-gradient(120deg, rgb(255 255 255 / 16%), transparent 38%),
+    linear-gradient(300deg, rgb(57 32 8 / 7%), transparent 46%),
+    linear-gradient(color-mix(in srgb, var(--habit-paper) 92%, transparent), var(--habit-paper)),
+    url('/paper.png');
+  background-size:
+    auto,
+    auto,
+    auto,
+    100px 100px;
+  border: 1px solid color-mix(in srgb, var(--habit-paper-edge) 62%, transparent);
+  border-radius: 4px 10px 5px 8px / 8px 4px 10px 5px;
+  box-shadow:
+    0 9px 18px rgb(52 28 5 / 20%),
+    0 2px 4px rgb(52 28 5 / 18%),
+    inset 0 0 0 3px rgb(255 255 255 / 8%);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+
+  &::before {
+    position: absolute;
+    inset: 6px;
+
+    content: '';
+    pointer-events: none;
+
+    border: 1px solid color-mix(in srgb, var(--habit-paper-edge) 18%, transparent);
+    border-radius: 2px 7px 3px 6px / 6px 3px 8px 4px;
+  }
 
   &:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 13px 24px rgb(52 28 5 / 24%),
+      0 3px 5px rgb(52 28 5 / 17%),
+      inset 0 0 0 3px rgb(255 255 255 / 9%);
+
     .controlButtons {
       opacity: 1;
     }
   }
 }
 
+.habitLevelCompleted {
+  --habit-paper: color-mix(in srgb, var(--main-theme-background) 68%, #d9dfad);
+
+  border-color: color-mix(in srgb, var(--rating-5) 45%, var(--habit-paper-edge));
+}
+
 .habitLevelEditing {
   z-index: 1;
+
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+
+  &::before {
+    display: none;
+  }
+
+  &:hover {
+    box-shadow: none;
+  }
 
   > form {
     position: absolute;
@@ -35,11 +92,22 @@
     left: 0;
 
     width: 100%;
-    padding: 10px;
+    padding: 16px;
 
     box-sizing: border-box;
-    border-radius: 15px;
-    background-color: var(--main-theme-color);
+    color: var(--habit-ink);
+    background:
+      linear-gradient(120deg, rgb(255 255 255 / 16%), transparent 38%),
+      linear-gradient(300deg, rgb(57 32 8 / 7%), transparent 46%),
+      linear-gradient(color-mix(in srgb, var(--habit-paper) 92%, transparent), var(--habit-paper)),
+      url('/paper.png');
+    background-size:
+      auto,
+      auto,
+      auto,
+      100px 100px;
+    border: 1px solid color-mix(in srgb, var(--habit-paper-edge) 62%, transparent);
+    border-radius: 4px 10px 5px 8px / 8px 4px 10px 5px;
   }
 }
 
@@ -51,6 +119,10 @@
 :global(::view-transition-group(habit-level-form)),
 :global(::view-transition-old(habit-level-form)) {
   animation: none;
+}
+
+:global(::view-transition-group(habit-level-form)) {
+  z-index: 10;
 }
 
 :global(::view-transition-old(habit-level-form)) {
@@ -73,7 +145,11 @@
 .habitLevelNumber {
   margin: 0;
 
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.78;
 }
 
 .checkIcon {
@@ -85,19 +161,29 @@
 .progressCircles {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 5px;
 }
 
 .progressCircle {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
 
-  border: 1px solid #ffffff;
+  border: 1px solid color-mix(in srgb, var(--habit-ink) 72%, transparent);
   border-radius: 50%;
+  box-shadow: inset 0 1px 2px rgb(53 28 5 / 12%);
 }
 
 .completedCircle {
-  background-color: var(--rating-5);
+  background-color: color-mix(in srgb, var(--rating-5) 68%, var(--habit-ink));
+  border-color: color-mix(in srgb, var(--rating-5) 55%, var(--habit-ink));
+}
+
+.description {
+  margin: 20px 0 16px;
+
+  font-size: 18px;
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 .numProgressWrap {
@@ -111,8 +197,13 @@
   margin: 0;
   padding: 5px 10px;
 
-  border-radius: 5px;
+  color: color-mix(in srgb, var(--habit-paper) 88%, white);
+  font-weight: 750;
+
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 3px 6px 3px 5px / 5px 3px 6px 4px;
   background-color: var(--accent-theme-color);
+  box-shadow: 0 2px 4px rgb(45 23 3 / 16%);
 }
 
 .changeButtons {
@@ -127,13 +218,15 @@
   width: 40px;
   padding: 5px;
 
-  color: #ffffff;
+  color: color-mix(in srgb, var(--habit-paper) 88%, white);
   font-size: 16px;
+  font-weight: 750;
 
-  border-radius: 5px;
+  border-radius: 3px 6px 3px 5px / 5px 3px 6px 4px;
   background-color: var(--accent-theme-color);
-  border: none;
+  border: 1px solid rgb(255 255 255 / 8%);
   cursor: pointer;
+  box-shadow: 0 2px 4px rgb(45 23 3 / 16%);
 
   transition: all 0.2s;
 
@@ -153,15 +246,19 @@
   width: 100%;
   flex-grow: 1;
 
-  color: #ffffff;
+  color: var(--habit-ink);
 
   cursor: pointer;
   background-color: transparent;
 
   transition: all 0.2s;
 
-  border: 1px dashed #ffffff;
-  border-radius: 15px;
+  border: 1px dashed color-mix(in srgb, var(--habit-ink) 58%, transparent);
+  border-radius: 2px 7px 3px 6px / 6px 3px 8px 4px;
+
+  &:hover {
+    background-color: rgb(255 255 255 / 10%);
+  }
 }
 
 .controlButtons {
@@ -183,15 +280,15 @@
 
   padding: 5px;
 
-  border: 0;
-  border-radius: 5px;
-  background-color: var(--accent-theme-color);
+  border: 1px solid color-mix(in srgb, var(--habit-paper-edge) 45%, transparent);
+  border-radius: 3px 6px 3px 5px / 5px 3px 6px 4px;
+  background-color: color-mix(in srgb, var(--habit-paper) 58%, transparent);
   cursor: pointer;
 
   transition: all 0.2s;
 
   &:hover {
-    background-color: var(--button-hover-bg);
+    background-color: color-mix(in srgb, var(--habit-paper-edge) 22%, var(--habit-paper));
   }
 }
 
@@ -199,11 +296,14 @@
   width: 100%;
   height: 100%;
 
-  color: #ffffff;
+  color: var(--habit-ink);
 }
 
 .comletedTag {
   height: 100%;
 
-  background-color: var(--accent-theme-color);
+  color: color-mix(in srgb, var(--habit-ink) 82%, black);
+
+  background-color: color-mix(in srgb, var(--rating-5) 38%, transparent);
+  border: 1px solid color-mix(in srgb, var(--rating-5) 45%, transparent);
 }
