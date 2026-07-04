@@ -6,7 +6,7 @@ import { UserMenu } from './UserMenu';
 
 export const AppMenu = () => {
   return (
-    <div className={s.root}>
+    <nav className={s.root} aria-label="Main navigation">
       <h2 className={s.title}>Foundation</h2>
       <ul className={s.linksList}>
         <li className={s.linksItem}>
@@ -38,6 +38,6 @@ export const AppMenu = () => {
         </li>
       </ul>
       <UserMenu />
-    </div>
+    </nav>
   );
 };
