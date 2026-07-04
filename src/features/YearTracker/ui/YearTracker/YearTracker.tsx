@@ -144,7 +144,11 @@ export const YearTracker = () => {
                   return (
                     <div
                       key={date}
-                      className={clsx(s.day, data[date] !== null && s[`rating-${data[date]}`])}
+                      className={clsx(
+                        s.day,
+                        data[date] !== null && s[`rating-${data[date]}`],
+                        activeDate === date && s.activeDay,
+                      )}
                       onClick={(event) => {
                         event.stopPropagation();
                         toggleActiveDate(date);

@@ -8,22 +8,45 @@
   align-items: center;
   padding: 16px;
 
-  background-color: rgb(0 0 0 / 35%);
+  background-color: rgb(36 20 5 / 48%);
+  backdrop-filter: blur(2px);
 }
 
 .content {
+  --note-paper: color-mix(in srgb, var(--main-theme-background) 55%, #f4dfb4);
+  --note-edge: color-mix(in srgb, var(--main-theme-color) 70%, #3b260e);
+  --note-ink: color-mix(in srgb, var(--main-theme-color) 38%, #20170e);
+
   position: relative;
 
   width: min(100%, 760px);
   min-height: 220px;
   padding: 50px 30px 20px 30px;
 
-  color: #ffffff;
+  color: var(--note-ink);
 
-  background-color: var(--main-theme-background);
-  border: 1px solid rgb(255 255 255 / 80%);
-  border-radius: 4px;
-  box-shadow: 0 16px 40px rgb(0 0 0 / 24%);
+  background:
+    linear-gradient(120deg, rgb(255 255 255 / 16%), transparent 38%),
+    linear-gradient(300deg, rgb(57 32 8 / 6%), transparent 48%),
+    linear-gradient(color-mix(in srgb, var(--note-paper) 92%, transparent), var(--note-paper)),
+    url('/paper.png');
+  background-size: auto, auto, auto, 100px 100px;
+  border: 1px solid color-mix(in srgb, var(--note-edge) 58%, transparent);
+  border-radius: 4px 11px 5px 9px / 9px 4px 12px 6px;
+  box-shadow:
+    0 20px 48px rgb(30 15 2 / 34%),
+    0 5px 12px rgb(30 15 2 / 22%);
+
+  &::before {
+    position: absolute;
+    inset: 42px 7px 7px;
+
+    content: '';
+    pointer-events: none;
+
+    border: 1px solid color-mix(in srgb, var(--note-edge) 17%, transparent);
+    border-radius: 2px 8px 3px 7px / 7px 3px 9px 4px;
+  }
 }
 
 .closeButton {
@@ -38,12 +61,12 @@
   height: 28px;
   padding: 4px;
 
-  color: #ffffff;
+  color: var(--note-ink);
   cursor: pointer;
 
-  background-color: transparent;
-  border: 1px solid rgb(255 255 255 / 80%);
-  border-radius: 4px;
+  background-color: rgb(255 255 255 / 12%);
+  border: 1px solid color-mix(in srgb, var(--note-edge) 40%, transparent);
+  border-radius: 3px 6px 3px 5px / 5px 3px 7px 4px;
   transition: 0.2s all;
 
   svg {
@@ -52,6 +75,6 @@
   }
 
   &:hover {
-    background-color: var(--accent-theme-color);
+    background-color: color-mix(in srgb, var(--main-theme-color) 18%, transparent);
   }
 }
