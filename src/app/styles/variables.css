@@ -1,7 +1,7 @@
 :root {
   /* --main-theme-color: #8D8FBE; */
   --main-theme-color: #8f5d13;
-  --main-theme-background: color-mix(in srgb, var(--main-theme-color) 65%, white);
+  --main-theme-background: color-mix(in srgb, var(--main-theme-color) 75%, white);
   --accent-theme-color: color-mix(in srgb, var(--main-theme-color) 90%, black);
   --button-hover-bg: color-mix(in srgb, var(--accent-theme-color) 85%, black);
   --error-color: #ff6b6b;

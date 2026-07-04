@@ -15,7 +15,7 @@ body {
   background:
     radial-gradient(
       circle at 10% 10%,
-      color-mix(in srgb, var(--main-theme-background) 94%, white) 0%,
+      color-mix(in srgb, var(--main-theme-color) 45%, transparent) 0%,
       transparent 45%
     ),
     radial-gradient(
