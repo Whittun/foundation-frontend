@@ -110,7 +110,7 @@ export const HabitLevelForm = ({
         >
           Save
         </button>
-        <button onClick={cancelHandler} className={s.createLevelButton}>
+        <button type="button" onClick={cancelHandler} className={s.createLevelButton}>
           Cancel
         </button>
       </div>

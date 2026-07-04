@@ -53,6 +53,10 @@
   animation: none;
 }
 
+:global(::view-transition-old(habit-level-form)) {
+  opacity: 0;
+}
+
 :global(::view-transition-new(habit-level-form)) {
   animation: none;
   border-radius: 15px;

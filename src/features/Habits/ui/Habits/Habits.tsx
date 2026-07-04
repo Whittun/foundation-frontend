@@ -1,9 +1,3 @@
-import clsx from 'clsx';
-import { Plus, SquarePen, Trash } from 'lucide-react';
-import React from 'react';
-import { flushSync } from 'react-dom';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
-import { CompletedTag } from '@/shared/ui/CompletedTag';
 import {
   useCreateHabitLevelMutation,
   useDeleteHabitLevelMutation,
@@ -11,6 +5,12 @@ import {
   useUpdateHabitLevelMutation,
 } from '@/features/Habits/api/habitsApi';
 import type { DraftInputsValues, UpdateHabitLevelArgs } from '@/features/Habits/model/types';
+import { CompletedTag } from '@/shared/ui/CompletedTag';
+import clsx from 'clsx';
+import { Plus, SquarePen, Trash } from 'lucide-react';
+import React from 'react';
+import { flushSync } from 'react-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { HabitLevelForm } from '../HabitLevelForm/HabitLevelForm';
 import s from './Habits.module.css';
 
@@ -94,7 +94,7 @@ export const Habits = () => {
     }
   };
 
-  const editHabitLevelHandler = (inputsValues: DraftInputsValues, habitLevelId: number) => {
+  const editHabitLevelHandler = async (inputsValues: DraftInputsValues, habitLevelId: number) => {
     if (
       !inputsValues.levelValue ||
       !inputsValues.targetValue ||
@@ -104,14 +104,23 @@ export const Habits = () => {
       throw new Error('Habit args is missing');
     }
 
-    updateHabitLevel({
-      habitLevelId: habitLevelId,
-      level: inputsValues.levelValue,
-      description: inputsValues.descriptionValue,
-      target: inputsValues.targetValue,
-    });
+    try {
+      await updateHabitLevel({
+        habitLevelId: habitLevelId,
+        level: inputsValues.levelValue,
+        description: inputsValues.descriptionValue,
+        target: inputsValues.targetValue,
+      }).unwrap();
 
-    setFormState(null);
+      setFormState(null);
+    } catch (error) {
+      if (typeof error === 'object' && error !== null && 'data' in error) {
+        const errorData = error.data as { message: string };
+
+        setCreateErrors({ level: errorData.message });
+        console.error(errorData.message);
+      }
+    }
   };
 
   const updateHabitProgress = (updateArgs: UpdateHabitLevelArgs) => {
@@ -140,6 +149,8 @@ export const Habits = () => {
   }
 
   if (isSuccess) {
+    const isCreate = habitLevelFormState?.type === 'create';
+
     return (
       <div className={s.detailRoot}>
         {data.map((habitLevel) => {
@@ -232,16 +243,18 @@ export const Habits = () => {
                     descriptionValue: habitLevel.description,
                     targetValue: habitLevel.target,
                   }}
+                  errors={createErrors}
+                  setErrors={setCreateErrors}
                 />
               )}
             </div>
           );
         })}
         <div
-          className={clsx(s.habitLevel, s.habitCreateLevel)}
+          className={clsx(s.habitLevel, s.habitCreateLevel, isCreate && s.habitLevelEditing)}
           style={{ viewTransitionName: 'habit-level-create' }}
         >
-          {habitLevelFormState && habitLevelFormState.type === 'create' ? (
+          {isCreate ? (
             <HabitLevelForm
               cancelHandler={cancelHandler}
               habitLevelHandler={createHabitLevelHandler}
