@@ -8,7 +8,7 @@ import {
   useUpdateHabitMutation,
 } from '@/features/Habits/api/habitsApi';
 import clsx from 'clsx';
-import { SquarePen, Trash } from 'lucide-react';
+import { Plus, SquarePen, Trash } from 'lucide-react';
 
 type HabitsMenuProps = {
   isShowForm: boolean;
@@ -100,12 +100,19 @@ export const HabitsMenu = ({ isShowForm, handleOpenForm, setIsShowForm }: Habits
 
   return (
     <section className={s.categories}>
+      <p className={s.menuLabel}>Habits</p>
       <div className={s.upButtonsWrapper}>
-        <button className={s.createCategory} onClick={handleOpenForm}>
-          Create Category
+        <button className={s.createCategory} onClick={handleOpenForm} type="button">
+          <Plus />
+          Create Habit
         </button>
         {data && data.length > 0 && (
-          <button className={s.editCategory} onClick={handleEditCategories}>
+          <button
+            className={s.editCategory}
+            onClick={handleEditCategories}
+            type="button"
+            aria-label="Edit categories"
+          >
             <SquarePen />
           </button>
         )}
@@ -120,10 +127,9 @@ export const HabitsMenu = ({ isShowForm, handleOpenForm, setIsShowForm }: Habits
             type="text"
           />
           <button
-            onClick={() => handleCreateHabit({ name })}
             disabled={!isActiveSave}
             className={clsx(s.createButton, { [s.disabledSave]: !isActiveSave })}
-            type="button"
+            type="submit"
           >
             Save
           </button>
@@ -147,15 +153,19 @@ export const HabitsMenu = ({ isShowForm, handleOpenForm, setIsShowForm }: Habits
                     ></input>
                     <div className={s.editHabitButtons}>
                       <button
-                        onClick={() => handleHabitEditSave(habit.id)}
                         className={clsx(s.editHabitButton, {
                           [s.disabledEdit]: isDisabledEdit,
                         })}
                         disabled={isDisabledEdit}
+                        type="submit"
                       >
                         Save
                       </button>
-                      <button className={s.editHabitButton} onClick={handleExitHabitEdit}>
+                      <button
+                        className={s.editHabitButton}
+                        onClick={handleExitHabitEdit}
+                        type="button"
+                      >
                         Cancel
                       </button>
                     </div>
@@ -166,19 +176,21 @@ export const HabitsMenu = ({ isShowForm, handleOpenForm, setIsShowForm }: Habits
                       className={({ isActive }) => clsx(s.link, isActive && s.activeLink)}
                       to={`${habit.id}`}
                     >
-                      {habit.name}
+                      <span className={s.linkLabel}>{habit.name}</span>
                     </NavLink>
                     {isActiveEdit && (
                       <div className={s.bottomButtonsWrapper}>
                         <button
                           className={s.habitControlButton}
                           onClick={() => handleEditHabit(habit.id, habit.name)}
+                          type="button"
                         >
                           <SquarePen />
                         </button>
                         <button
                           className={s.habitControlButton}
                           onClick={() => handleDeleteCategory(habit.id)}
+                          type="button"
                         >
                           <Trash />
                         </button>
