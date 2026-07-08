@@ -1,11 +1,10 @@
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import s from './ObjectiveNode.module.css';
 
+import { useObjectiveNodeActions } from '@/features/Objectives/model/ObjectiveNodeActionsContext';
 import clsx from 'clsx';
 import { Check, CornerDownLeft } from 'lucide-react';
 import React from 'react';
-import { CompletedTag } from '@/shared/ui/CompletedTag';
-import { useObjectiveNodeActions } from '@/features/Objectives/model/ObjectiveNodeActionsContext';
 
 type ObjectiveNodeData = {
   label: string;
@@ -67,14 +66,25 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
 
   return (
     <div className={clsx(s.root, { [s.selected]: selected, [s.completed]: data.completed })}>
-      {selected && !isEditing && (
-        <button onClick={completeButtonHandler} className={clsx(s.completeButton, 'nodrag')}>
+      <Handle className={s.handle} type="target" position={Position.Top} />
+      <Handle className={s.handle} type="source" position={Position.Bottom} />
+
+      <div className={s.nodeHeader}>
+        <span>{data.completed ? 'Objective complete' : 'Objective'}</span>
+        <button
+          type="button"
+          title={data.completed ? 'Mark as active' : 'Mark as completed'}
+          aria-label={data.completed ? 'Mark objective as active' : 'Mark objective as completed'}
+          aria-hidden={!selected || isEditing}
+          tabIndex={selected && !isEditing ? 0 : -1}
+          onClick={completeButtonHandler}
+          className={clsx(s.completeButton, 'nodrag', {
+            [s.hiddenCompleteButton]: !selected || isEditing,
+          })}
+        >
           {data.completed ? <CornerDownLeft /> : <Check />}
         </button>
-      )}
-
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+      </div>
 
       {isEditing ? (
         <textarea
@@ -93,8 +103,6 @@ export const ObjectiveNode = ({ data, selected, id }: ObjectiveNodeProps) => {
           >
             {data.label}
           </p>
-
-          {data.completed && <CompletedTag className={s.completedTag} />}
         </React.Fragment>
       )}
     </div>

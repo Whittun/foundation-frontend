@@ -19,15 +19,15 @@ import {
 import '@xyflow/react/dist/style.css';
 import React from 'react';
 
-import clsx from 'clsx';
-import { Plus } from 'lucide-react';
-import { useAppDispatch } from '@/shared/hooks';
 import {
   objectivesApi,
   useGetObjectivesGraphQuery,
   useSaveObjectivesGraphMutation,
 } from '@/features/Objectives/api/objectivesApi';
 import { ObjectiveNodeActionsProvider } from '@/features/Objectives/model/ObjectiveNodeActionsContext';
+import { useAppDispatch } from '@/shared/hooks';
+import clsx from 'clsx';
+import { Map, Plus } from 'lucide-react';
 import { ObjectiveNode } from '../ObjectiveNode/ObjectiveNode';
 import s from './Objectives.module.css';
 
@@ -324,15 +324,28 @@ export const Objectives = () => {
 
   return (
     <div className={s.root}>
-      <button
-        onClick={handleCreateNode}
-        className={clsx(s.addNode, { [s.activeCreate]: isCreateMode })}
-      >
-        <Plus /> Add Objective
-      </button>
+      <header className={s.toolbar}>
+        <div className={s.heading}>
+          <Map aria-hidden="true" />
+          <div>
+            <span>Quest map</span>
+            <h1>Objectives</h1>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleCreateNode}
+          className={clsx(s.addNode, { [s.activeCreate]: isCreateMode })}
+        >
+          <Plus /> {isCreateMode ? 'Place on map' : 'Add Objective'}
+        </button>
+      </header>
+
       <div className={clsx(s.flowWrapper, { [s.createMode]: isCreateMode })}>
         <ObjectiveNodeActionsProvider value={objectiveNodeActions}>
           <ReactFlow
+            className={s.flow}
             onMouseMove={handleMouseMove}
             nodes={nodes}
             edges={edges}
@@ -346,10 +359,30 @@ export const Objectives = () => {
             nodeTypes={nodeTypes}
             snapToGrid={true}
             snapGrid={[20, 20]}
+            fitViewOptions={{ padding: 0.2 }}
+            defaultEdgeOptions={{ interactionWidth: 24 }}
+            connectionLineStyle={{ stroke: '#6f4818', strokeWidth: 2 }}
           >
-            <Background color="#000000" variant={BackgroundVariant.Dots} />
-            <MiniMap />
-            <Controls />
+            <Background
+              color="rgba(91, 58, 18, 0.16)"
+              gap={24}
+              size={1}
+              variant={BackgroundVariant.Dots}
+            />
+            <MiniMap
+              ariaLabel="Objectives map overview"
+              bgColor="#cda96e"
+              maskColor="rgba(83, 52, 15, 0.2)"
+              maskStrokeColor="#704817"
+              maskStrokeWidth={2}
+              nodeColor={(node) => (node.data.completed ? '#78854f' : '#8f5d13')}
+              nodeStrokeColor="#50320e"
+              nodeStrokeWidth={2}
+              nodeBorderRadius={3}
+              pannable
+              zoomable
+            />
+            <Controls aria-label="Objectives map controls" />
           </ReactFlow>
         </ObjectiveNodeActionsProvider>
       </div>

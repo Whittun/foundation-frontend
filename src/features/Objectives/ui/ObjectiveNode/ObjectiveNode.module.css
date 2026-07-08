@@ -1,62 +1,127 @@
 .root {
   position: relative;
+  width: 220px;
+  min-height: 88px;
+  padding: 14px 18px 16px;
 
-  width: 200px;
-  padding: 10px;
+  color: #472e0e;
+  background:
+    linear-gradient(135deg, rgb(239 216 170 / 94%), rgb(219 183 121 / 94%)),
+    url('/paper.png');
+  background-size: auto, 100px 100px;
+  border: 1px solid #8a5a1e;
+  border-radius: 5px 9px 6px 4px;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
 
-  background-color: #ffffff;
-  border-radius: 8px;
-  border: 2px solid var(--accent-theme-color);
+.root::after {
+  position: absolute;
+  right: 8px;
+  bottom: 7px;
+  left: 8px;
+
+  height: 1px;
+  pointer-events: none;
+  content: '';
+  background: linear-gradient(90deg, transparent, rgb(104 65 18 / 27%), transparent);
 }
 
 .selected {
-  border-color: salmon;
+  border-color: #4f310b;
+  outline: 3px solid #704615;
+  outline-offset: 2px;
+}
+
+.nodeHeader {
+  display: flex;
+  min-height: 26px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+
+  border-bottom: 1px solid rgb(112 70 20 / 25%);
+
+  > span {
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #7a5528;
+  }
 }
 
 .completeButton {
-  position: absolute;
-  top: -26px;
-  right: -2px;
-
-  width: 20px;
-  height: 20px;
+  display: grid;
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
   padding: 0;
+  place-items: center;
 
-  color: var(--accent-theme-color);
+  color: #57370f;
 
-  background-color: #ffffff;
-  border: 1px solid var(--accent-theme-color);
+  background-color: rgb(231 204 151 / 72%);
+  border: 1px solid rgb(104 64 17 / 50%);
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 5px 7px 6px 4px;
+  transition:
+    background-color 120ms ease,
+    transform 120ms ease;
+
+  &:hover {
+    background-color: #e7c787;
+    transform: translateY(-1px);
+  }
 
   svg {
-    width: 100%;
-    height: 100%;
+    width: 16px;
+    height: 16px;
   }
+}
+
+.hiddenCompleteButton {
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .textarea {
   width: 100%;
-  min-height: 60px;
-  padding: 0;
+  min-height: 62px;
+  padding: 7px 8px;
 
-  font-size: 16px;
   font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  line-height: 1.35;
+  color: #3e270b;
 
-  background-color: transparent;
-  border: none;
-  outline: none;
+  background-color: rgb(255 239 201 / 25%);
+  border: 1px solid rgb(105 64 16 / 29%);
+  border-radius: 4px 7px 5px 3px;
+  outline: 2px solid transparent;
 
   resize: none;
+
+  &:focus {
+    border-color: #76501d;
+    outline-color: rgb(118 80 29 / 18%);
+  }
 }
 
 .label {
   width: 100%;
   height: 100%;
-  margin: 0;
   min-height: 20px;
+  margin: 0;
 
   font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 
 .disabledLabel {
@@ -64,15 +129,39 @@
 }
 
 .completed {
-  border-color: green;
-  background-color: rgb(226, 235, 226);
+  color: #43502d;
+  background:
+    linear-gradient(135deg, rgb(215 210 158 / 94%), rgb(187 184 122 / 94%)),
+    url('/paper.png');
+  background-size: auto, 100px 100px;
+  border-color: #6d7341;
+
+  .nodeHeader {
+    border-bottom-color: rgb(73 85 41 / 25%);
+  }
+
+  .nodeHeader > span {
+    color: #596439;
+  }
 }
 
-.completedTag {
-  margin-top: 14px;
+.handle {
+  width: 11px;
+  height: 11px;
 
-  color: rgb(70, 153, 70);
+  background-color: #79501d;
+  border: 2px solid #e5c98f;
+  box-shadow: 0 1px 3px rgb(54 31 4 / 32%);
+  transition:
+    background-color 120ms ease,
+    transform 120ms ease;
 
-  background-color: rgb(207, 234, 207);
-  border: 1px solid rgb(133, 184, 133);
+  &:hover {
+    background-color: #3f280b;
+    transform: scale(1.25);
+  }
+}
+
+.completed .handle {
+  background-color: #66723e;
 }
