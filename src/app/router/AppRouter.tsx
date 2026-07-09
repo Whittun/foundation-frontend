@@ -3,6 +3,7 @@ import { HabitsPage } from '@/pages/HabitsPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { ObjectivesPage } from '@/pages/ObjectivesPage';
 import { RegisterPage } from '@/pages/RegisterPage';
+import { TaskBoardPage } from '@/pages/TaskBoardPage';
 import { YearTrackerPage } from '@/pages/YearTrackerPage';
 import { AppLayout } from '@/widgets/AppLayout';
 import { Route, Routes } from 'react-router-dom';
@@ -15,6 +16,7 @@ export const AppRouter = () => {
         <Route element={<AppLayout />}>
           <Route path="/" element={'Main Page!'} />
           <Route path="/yearTracker" element={<YearTrackerPage />} />
+          <Route path="/task-board" element={<TaskBoardPage />} />
           <Route path="/habits" element={<HabitsPage />}>
             <Route index element={<HabitsIndex />} />
             <Route path=":habitId" element={<Habits />} />

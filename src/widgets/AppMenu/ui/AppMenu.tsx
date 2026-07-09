@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { CalendarDays, ChartNoAxesColumnIncreasing, Map } from 'lucide-react';
+import { CalendarDays, ChartNoAxesColumnIncreasing, Kanban, Map } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import s from './AppMenu.module.css';
 import { UserMenu } from './UserMenu';
@@ -16,6 +16,15 @@ export const AppMenu = () => {
           >
             <CalendarDays className={s.icon} />
             Year Tracker
+          </NavLink>
+        </li>
+        <li className={s.linksItem}>
+          <NavLink
+            className={({ isActive }) => clsx(s.link, isActive && s.activeLink)}
+            to="/task-board"
+          >
+            <Kanban className={s.icon} />
+            Task Board
           </NavLink>
         </li>
         <li className={s.linksItem}>
