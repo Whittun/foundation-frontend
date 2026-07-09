@@ -48,6 +48,7 @@ export const AuthForm = ({
     isTouchedPassword && isInvalidPassword ? 'Password must be at least 8 characters long' : null;
 
   const emailError = isTouchedEmail && isInvalidEmail ? 'Required field' : null;
+  const submitText = mode === 'register' ? 'Sign up' : 'Sign in';
 
   const handlePasswordBlur = () => {
     setIsTouchedPassword(true);
@@ -105,7 +106,7 @@ export const AuthForm = ({
           className={clsx(s.send, { [s.disabledSend]: isInvalidFields || isLoading })}
           type="submit"
         >
-          {isLoading ? 'Loading...' : 'Send'}
+          {isLoading ? 'Loading...' : submitText}
         </button>
         {mode === 'login' && (
           <p className={s.linkText}>
