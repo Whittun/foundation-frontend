@@ -8,9 +8,11 @@
   color: #4b310f;
   background:
     radial-gradient(circle at 82% 10%, rgb(255 242 204 / 24%), transparent 30%),
-    linear-gradient(rgb(230 203 151 / 92%), rgb(216 180 119 / 92%)),
-    url('/paper.png');
-  background-size: auto, auto, 100px 100px;
+    linear-gradient(rgb(230 203 151 / 92%), rgb(216 180 119 / 92%)), url('/paper.png');
+  background-size:
+    auto,
+    auto,
+    100px 100px;
   border: 1px solid rgb(101 63 16 / 52%);
   border-radius: 8px 15px 10px 6px;
   box-shadow:
@@ -43,6 +45,7 @@
 .title {
   position: relative;
   margin: 0 0 28px;
+  margin-bottom: 0;
   padding-bottom: 15px;
 
   color: #4a2e0c;

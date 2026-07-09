@@ -29,7 +29,7 @@ export const LoginPage = () => {
   return (
     <div className={s.root}>
       <AuthForm
-        title={'Log in'}
+        title={'Sign in to Foundation'}
         isLoading={isLoading}
         serverError={error}
         sendData={handleLogin}

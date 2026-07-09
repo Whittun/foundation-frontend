@@ -60,6 +60,10 @@ export const AuthForm = ({
   return (
     <div className={s.root}>
       <h1 className={s.title}>{title}</h1>
+      <p>
+        Foundation is an independent app for capturing your life path, reflections, and personal
+        progress over time.
+      </p>
       <form onSubmit={handleSubmit} className={s.form}>
         {serverError && <span className={s.error}>{serverError}</span>}
         <p className={s.inputWrap}>

@@ -26,7 +26,7 @@ export const RegisterPage = () => {
   return (
     <div className={s.root}>
       <AuthForm
-        title={'Registration'}
+        title={'Sign up for Foundation'}
         isLoading={isLoading}
         serverError={error}
         sendData={handleRegister}
