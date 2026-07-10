@@ -27,8 +27,9 @@ import {
 import { ObjectiveNodeActionsProvider } from '@/features/Objectives/model/ObjectiveNodeActionsContext';
 import { useAppDispatch } from '@/shared/hooks';
 import clsx from 'clsx';
-import { Map, Plus } from 'lucide-react';
+import { CircleHelp, Map, Plus } from 'lucide-react';
 import { ObjectiveNode } from '../ObjectiveNode/ObjectiveNode';
+import { ObjectivesControlsModal } from '../ObjectivesControlsModal';
 import s from './Objectives.module.css';
 
 type ObjectiveFlowNode = {
@@ -53,6 +54,7 @@ export const Objectives = () => {
   const [nodes, setNodes] = React.useState<ObjectiveFlowNode[]>([]);
   const [edges, setEdges] = React.useState<ObjectiveFlowEdge[]>([]);
   const [isCreateMode, setIsCreateMode] = React.useState(false);
+  const [isControlsOpen, setIsControlsOpen] = React.useState(false);
   const [clipboardGraph, setClipboardGraph] = React.useState<{
     nodes: ObjectiveFlowNode[];
     edges: ObjectiveFlowEdge[];
@@ -195,6 +197,14 @@ export const Objectives = () => {
     setIsCreateMode((prev) => !prev);
   };
 
+  const handleOpenControls = () => {
+    setIsControlsOpen(true);
+  };
+
+  const handleCloseControls = React.useCallback(() => {
+    setIsControlsOpen(false);
+  }, []);
+
   React.useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
       if (event.code === 'KeyC' && event.ctrlKey) {
@@ -333,14 +343,22 @@ export const Objectives = () => {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleCreateNode}
-          className={clsx(s.addNode, { [s.activeCreate]: isCreateMode })}
-        >
-          <Plus /> {isCreateMode ? 'Place on map' : 'Add Objective'}
-        </button>
+        <div className={s.toolbarActions}>
+          <button type="button" onClick={handleOpenControls} className={s.helpButton}>
+            <CircleHelp /> Controls
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCreateNode}
+            className={clsx(s.addNode, { [s.activeCreate]: isCreateMode })}
+          >
+            <Plus /> {isCreateMode ? 'Place on map' : 'Add Objective'}
+          </button>
+        </div>
       </header>
+
+      <ObjectivesControlsModal isOpen={isControlsOpen} onClose={handleCloseControls} />
 
       <div className={clsx(s.flowWrapper, { [s.createMode]: isCreateMode })}>
         <ObjectiveNodeActionsProvider value={objectiveNodeActions}>

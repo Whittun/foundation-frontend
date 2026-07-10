@@ -152,13 +152,9 @@
   background-color: #79501d;
   border: 2px solid #e5c98f;
   box-shadow: 0 1px 3px rgb(54 31 4 / 32%);
-  transition:
-    background-color 120ms ease,
-    transform 120ms ease;
 
   &:hover {
-    background-color: #3f280b;
-    transform: scale(1.25);
+    background-color: #79501d;
   }
 }
 
