@@ -5,8 +5,7 @@
 
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 32px);
-  min-height: 540px;
+  min-height: max(540px, calc(100vh - 32px));
 
   color: var(--task-ink);
 }
@@ -24,7 +23,7 @@
     auto,
     100px 100px;
   border: 1px solid rgb(100 63 17 / 45%);
-  border-radius: 8px 13px 9px 6px;
+  border-radius: 8px 14px 8px 6px;
   box-shadow:
     0 6px 14px rgb(69 41 7 / 17%),
     inset 0 1px rgb(255 241 205 / 58%);
@@ -55,7 +54,6 @@
 .board {
   display: grid;
   flex-grow: 1;
-  min-height: 0;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
@@ -63,7 +61,6 @@
 .column {
   position: relative;
 
-  min-height: 0;
   padding: 16px;
 
   color: var(--task-ink);
@@ -115,6 +112,46 @@
   opacity: 0.78;
 }
 
+.columnActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.openCreateFormButton {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+
+  color: var(--task-ink);
+
+  background-color: rgb(255 255 255 / 15%);
+  border: 1px solid color-mix(in srgb, var(--task-paper-edge) 38%, transparent);
+  border-radius: 4px 7px 5px 3px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgb(255 255 255 / 28%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #704615;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 17px;
+    height: 17px;
+    transition: transform 160ms ease;
+  }
+}
+
+.openCreateFormButtonActive svg {
+  transform: rotate(45deg);
+}
+
 .count {
   display: inline-flex;
   align-items: center;
@@ -136,6 +173,91 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.createTaskForm {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+
+  background-color: rgb(255 255 255 / 14%);
+  border: 1px dashed color-mix(in srgb, var(--task-paper-edge) 42%, transparent);
+  border-radius: 3px 7px 3px 6px / 6px 3px 8px 4px;
+}
+
+.taskInput {
+  width: 100%;
+  padding: 9px 10px;
+
+  color: var(--task-ink);
+  font: inherit;
+
+  background-color: rgb(255 247 226 / 55%);
+  border: 1px solid color-mix(in srgb, var(--task-paper-edge) 32%, transparent);
+  border-radius: 4px;
+  outline: none;
+
+  &::placeholder {
+    color: color-mix(in srgb, var(--task-ink) 52%, transparent);
+  }
+
+  &:focus {
+    border-color: #704615;
+    box-shadow: 0 0 0 2px rgb(112 70 21 / 15%);
+  }
+}
+
+textarea.taskInput {
+  resize: vertical;
+}
+
+.createTaskButton {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: 6px;
+  padding: 8px 12px;
+
+  color: color-mix(in srgb, var(--task-paper) 88%, white);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  background-color: var(--accent-theme-color);
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 4px 7px 5px 3px;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #704615;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
 }
 
 .task {

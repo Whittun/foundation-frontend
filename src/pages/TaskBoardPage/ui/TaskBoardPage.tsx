@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { Check, Kanban } from 'lucide-react';
+import { Check, Kanban, Plus } from 'lucide-react';
 import React from 'react';
 import s from './TaskBoardPage.module.css';
 
@@ -54,6 +54,31 @@ const columns = [
 
 export const TaskBoardPage = () => {
   const [tasks, setTasks] = React.useState(todayTasks);
+  const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false);
+  const [title, setTitle] = React.useState('');
+  const [description, setDescription] = React.useState('');
+
+  const handleCreateTask = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const trimmedTitle = title.trim();
+    const trimmedDescription = description.trim();
+
+    if (!trimmedTitle) return;
+
+    setTasks((currentTasks) => [
+      ...currentTasks,
+      {
+        id: Date.now(),
+        title: trimmedTitle,
+        description: trimmedDescription,
+        completed: false,
+      },
+    ]);
+    setTitle('');
+    setDescription('');
+    setIsCreateFormOpen(false);
+  };
 
   const handleToggleTask = (taskId: number) => {
     setTasks((currentTasks) =>
@@ -82,9 +107,61 @@ export const TaskBoardPage = () => {
             <section className={s.column} key={column.title}>
               <header className={s.columnHeader}>
                 <h2 className={s.columnTitle}>{column.title}</h2>
-                <span className={s.count}>{columnTasks.length}</span>
+                <div className={s.columnActions}>
+                  {column.title === 'Today' && (
+                    <button
+                      type="button"
+                      className={clsx(s.openCreateFormButton, {
+                        [s.openCreateFormButtonActive]: isCreateFormOpen,
+                      })}
+                      onClick={() => setIsCreateFormOpen((isOpen) => !isOpen)}
+                      aria-label={isCreateFormOpen ? 'Close task form' : 'Create task'}
+                      aria-expanded={isCreateFormOpen}
+                      aria-controls="create-task-form"
+                      title={isCreateFormOpen ? 'Close task form' : 'Create task'}
+                    >
+                      <Plus aria-hidden="true" />
+                    </button>
+                  )}
+                  <span className={s.count}>{columnTasks.length}</span>
+                </div>
               </header>
               <div className={s.tasks}>
+                {column.title === 'Today' && isCreateFormOpen && (
+                  <form
+                    id="create-task-form"
+                    className={s.createTaskForm}
+                    onSubmit={handleCreateTask}
+                  >
+                    <label className={s.srOnly} htmlFor="task-title">
+                      Task title
+                    </label>
+                    <input
+                      id="task-title"
+                      className={s.taskInput}
+                      value={title}
+                      onChange={(event) => setTitle(event.target.value)}
+                      placeholder="Task title"
+                      maxLength={100}
+                    />
+                    <label className={s.srOnly} htmlFor="task-description">
+                      Task description
+                    </label>
+                    <textarea
+                      id="task-description"
+                      className={s.taskInput}
+                      value={description}
+                      onChange={(event) => setDescription(event.target.value)}
+                      placeholder="Description (optional)"
+                      maxLength={300}
+                      rows={2}
+                    />
+                    <button className={s.createTaskButton} type="submit" disabled={!title.trim()}>
+                      <Plus aria-hidden="true" />
+                      Add task
+                    </button>
+                  </form>
+                )}
                 {columnTasks.length > 0 ? (
                   columnTasks.map((task) => (
                     <div
