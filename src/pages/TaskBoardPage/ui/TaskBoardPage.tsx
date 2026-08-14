@@ -1,6 +1,7 @@
 import clsx from 'clsx';
-import { Check, Kanban, Plus } from 'lucide-react';
+import { Check, Kanban, Moon, Plus } from 'lucide-react';
 import React from 'react';
+import { Modal } from '@/shared';
 import s from './TaskBoardPage.module.css';
 
 type Task = {
@@ -55,6 +56,7 @@ const columns = [
 export const TaskBoardPage = () => {
   const [tasks, setTasks] = React.useState(todayTasks);
   const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false);
+  const [isDaySummaryOpen, setIsDaySummaryOpen] = React.useState(false);
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
 
@@ -88,6 +90,18 @@ export const TaskBoardPage = () => {
     );
   };
 
+  const handleStartNewDay = () => {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) => ({
+        ...task,
+        completed: false,
+      })),
+    );
+    setIsDaySummaryOpen(false);
+  };
+
+  const completedTasksCount = tasks.filter((task) => task.completed).length;
+
   return (
     <section className={s.root}>
       <header className={s.toolbar}>
@@ -97,6 +111,10 @@ export const TaskBoardPage = () => {
             <h1>Task Board</h1>
           </div>
         </div>
+        <button className={s.finishDayButton} type="button" onClick={() => setIsDaySummaryOpen(true)}>
+          <Moon aria-hidden="true" />
+          Finish day
+        </button>
       </header>
 
       <div className={s.board} aria-label="Task board columns">
@@ -198,6 +216,52 @@ export const TaskBoardPage = () => {
           );
         })}
       </div>
+
+      <Modal isOpen={isDaySummaryOpen} onClose={() => setIsDaySummaryOpen(false)}>
+        <section className={s.daySummary}>
+          <header className={s.daySummaryHeader}>
+            <div>
+              <span>Day summary</span>
+              <h2>Review today’s tasks</h2>
+            </div>
+            <strong>
+              {completedTasksCount} / {tasks.length}
+            </strong>
+          </header>
+
+          <p className={s.daySummaryHint}>
+            Check anything you finished before starting the next day.
+          </p>
+
+          <div className={s.summaryTasks}>
+            {tasks.map((task) => (
+              <div
+                className={clsx(s.task, { [s.completedTask]: task.completed })}
+                key={task.id}
+              >
+                <div className={s.taskHeader}>
+                  <h3>{task.title}</h3>
+                  <button
+                    type="button"
+                    className={s.completeButton}
+                    onClick={() => handleToggleTask(task.id)}
+                    aria-label={
+                      task.completed ? `Mark ${task.title} as active` : `Complete ${task.title}`
+                    }
+                  >
+                    {task.completed && <Check aria-hidden="true" />}
+                  </button>
+                </div>
+                {task.description && <p>{task.description}</p>}
+              </div>
+            ))}
+          </div>
+
+          <button className={s.startNextDayButton} type="button" onClick={handleStartNewDay}>
+            Start new day
+          </button>
+        </section>
+      </Modal>
     </section>
   );
 };

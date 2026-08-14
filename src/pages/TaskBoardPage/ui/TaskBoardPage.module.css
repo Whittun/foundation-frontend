@@ -51,6 +51,39 @@
   }
 }
 
+.finishDayButton,
+.startNextDayButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 13px;
+
+  color: color-mix(in srgb, var(--task-paper) 88%, white);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  background-color: var(--accent-theme-color);
+  border: 1px solid rgb(255 255 255 / 8%);
+  border-radius: 4px 7px 5px 3px;
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.08);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #704615;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 .board {
   display: grid;
   flex-grow: 1;
@@ -393,6 +426,57 @@ textarea.taskInput {
     font-weight: 700;
     line-height: 1.35;
   }
+}
+
+.daySummary {
+  position: relative;
+  z-index: 1;
+}
+
+.daySummaryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  span {
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.68;
+  }
+
+  h2 {
+    margin: 3px 0 0;
+    font-size: 22px;
+  }
+
+  strong {
+    flex: 0 0 auto;
+    font-size: 18px;
+  }
+}
+
+.daySummaryHint {
+  margin: 10px 0 16px;
+  font-size: 14px;
+  font-weight: 650;
+  opacity: 0.72;
+}
+
+.summaryTasks {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: min(55vh, 520px);
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.startNextDayButton {
+  margin-top: 18px;
+  margin-left: auto;
 }
 
 @media (width <= 900px) {
