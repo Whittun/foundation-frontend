@@ -1,5 +1,35 @@
-import { Kanban } from 'lucide-react';
+import clsx from 'clsx';
+import { Check, Kanban } from 'lucide-react';
+import React from 'react';
 import s from './TaskBoardPage.module.css';
+
+type Task = {
+  id: number;
+  title: string;
+  description: string;
+  completed: boolean;
+};
+
+const todayTasks: Task[] = [
+  {
+    id: 1,
+    title: 'Review priorities',
+    description: 'Choose the three most important things to focus on today.',
+    completed: false,
+  },
+  {
+    id: 2,
+    title: 'Finish board UI',
+    description: 'Polish the task cards and check how they behave in the Today column.',
+    completed: false,
+  },
+  {
+    id: 3,
+    title: 'Plan tomorrow',
+    description: 'Write down the first task for tomorrow before finishing the day.',
+    completed: false,
+  },
+];
 
 const columns = [
   {
@@ -12,7 +42,7 @@ const columns = [
     title: 'Today',
     placeholder: null,
     description: null,
-    tasks: ['Review priorities', 'Finish board UI'],
+    tasks: todayTasks,
   },
   {
     title: 'Tasks',
@@ -23,6 +53,16 @@ const columns = [
 ];
 
 export const TaskBoardPage = () => {
+  const [tasks, setTasks] = React.useState(todayTasks);
+
+  const handleToggleTask = (taskId: number) => {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) =>
+        task.id === taskId ? { ...task, completed: !task.completed } : task,
+      ),
+    );
+  };
+
   return (
     <section className={s.root}>
       <header className={s.toolbar}>
@@ -35,28 +75,51 @@ export const TaskBoardPage = () => {
       </header>
 
       <div className={s.board} aria-label="Task board columns">
-        {columns.map((column) => (
-          <section className={s.column} key={column.title}>
-            <header className={s.columnHeader}>
-              <h2 className={s.columnTitle}>{column.title}</h2>
-              <span className={s.count}>{column.tasks.length}</span>
-            </header>
-            <div className={s.tasks}>
-              {column.tasks.length > 0 ? (
-                column.tasks.map((task) => (
-                  <div className={s.task} key={task}>
-                    {task}
+        {columns.map((column) => {
+          const columnTasks = column.title === 'Today' ? tasks : column.tasks;
+
+          return (
+            <section className={s.column} key={column.title}>
+              <header className={s.columnHeader}>
+                <h2 className={s.columnTitle}>{column.title}</h2>
+                <span className={s.count}>{columnTasks.length}</span>
+              </header>
+              <div className={s.tasks}>
+                {columnTasks.length > 0 ? (
+                  columnTasks.map((task) => (
+                    <div
+                      className={clsx(s.task, { [s.completedTask]: task.completed })}
+                      key={task.id}
+                    >
+                      <div className={s.taskHeader}>
+                        <h3>{task.title}</h3>
+                        <button
+                          type="button"
+                          className={s.completeButton}
+                          onClick={() => handleToggleTask(task.id)}
+                          aria-label={
+                            task.completed
+                              ? `Mark ${task.title} as active`
+                              : `Complete ${task.title}`
+                          }
+                          title={task.completed ? 'Mark as active' : 'Complete task'}
+                        >
+                          {task.completed && <Check aria-hidden="true" />}
+                        </button>
+                      </div>
+                      <p>{task.description}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className={s.placeholder}>
+                    <span>{column.placeholder}</span>
+                    <p>{column.description}</p>
                   </div>
-                ))
-              ) : (
-                <div className={s.placeholder}>
-                  <span>{column.placeholder}</span>
-                  <p>{column.description}</p>
-                </div>
-              )}
-            </div>
-          </section>
-        ))}
+                )}
+              </div>
+            </section>
+          );
+        })}
       </div>
     </section>
   );
