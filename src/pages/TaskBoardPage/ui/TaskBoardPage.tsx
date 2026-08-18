@@ -1,7 +1,7 @@
+import { Modal } from '@/shared';
 import clsx from 'clsx';
 import { Check, Kanban, Moon, Plus } from 'lucide-react';
 import React from 'react';
-import { Modal } from '@/shared';
 import s from './TaskBoardPage.module.css';
 
 type Task = {
@@ -9,6 +9,17 @@ type Task = {
   title: string;
   description: string;
   completed: boolean;
+};
+
+const ACTIVE_DAY_STORAGE_KEY = 'taskBoardActiveDay';
+const DAY_CHECK_INTERVAL = 60000;
+
+const getLocalDayKey = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 };
 
 const todayTasks: Task[] = [
@@ -57,8 +68,41 @@ export const TaskBoardPage = () => {
   const [tasks, setTasks] = React.useState(todayTasks);
   const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false);
   const [isDaySummaryOpen, setIsDaySummaryOpen] = React.useState(false);
+  const [activeDay, setActiveDay] = React.useState(
+    () => localStorage.getItem(ACTIVE_DAY_STORAGE_KEY) ?? getLocalDayKey(),
+  );
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
+
+  const checkActiveDay = React.useCallback(() => {
+    if (activeDay !== getLocalDayKey()) {
+      setIsDaySummaryOpen(true);
+    }
+  }, [activeDay]);
+
+  React.useEffect(() => {
+    localStorage.setItem(ACTIVE_DAY_STORAGE_KEY, activeDay);
+  }, [activeDay]);
+
+  React.useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkActiveDay();
+      }
+    };
+
+    checkActiveDay();
+
+    window.addEventListener('focus', checkActiveDay);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    const intervalId = window.setInterval(checkActiveDay, DAY_CHECK_INTERVAL);
+
+    return () => {
+      window.removeEventListener('focus', checkActiveDay);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.clearInterval(intervalId);
+    };
+  }, [checkActiveDay]);
 
   const handleCreateTask = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,6 +141,7 @@ export const TaskBoardPage = () => {
         completed: false,
       })),
     );
+    setActiveDay(getLocalDayKey());
     setIsDaySummaryOpen(false);
   };
 
@@ -111,7 +156,11 @@ export const TaskBoardPage = () => {
             <h1>Task Board</h1>
           </div>
         </div>
-        <button className={s.finishDayButton} type="button" onClick={() => setIsDaySummaryOpen(true)}>
+        <button
+          className={s.finishDayButton}
+          type="button"
+          onClick={() => setIsDaySummaryOpen(true)}
+        >
           <Moon aria-hidden="true" />
           Finish day
         </button>
@@ -235,10 +284,7 @@ export const TaskBoardPage = () => {
 
           <div className={s.summaryTasks}>
             {tasks.map((task) => (
-              <div
-                className={clsx(s.task, { [s.completedTask]: task.completed })}
-                key={task.id}
-              >
+              <div className={clsx(s.task, { [s.completedTask]: task.completed })} key={task.id}>
                 <div className={s.taskHeader}>
                   <h3>{task.title}</h3>
                   <button
