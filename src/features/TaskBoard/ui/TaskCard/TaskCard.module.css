@@ -1,0 +1,211 @@
+.task {
+  --task-paper-edge: color-mix(in srgb, var(--main-theme-color) 70%, #3b260e);
+  --task-ink: color-mix(in srgb, var(--main-theme-color) 38%, #20170e);
+
+  position: relative;
+
+  padding: 14px 14px 15px;
+
+  color: var(--task-ink);
+
+  background: linear-gradient(135deg, #f0d8a8, #dfba78);
+  border: 1px solid color-mix(in srgb, var(--task-paper-edge) 38%, transparent);
+  border-radius: 3px 7px 3px 6px / 6px 3px 8px 4px;
+  box-shadow:
+    0 3px 7px rgb(54 28 5 / 10%),
+    inset 0 1px rgb(255 255 255 / 22%);
+
+  &::after {
+    position: absolute;
+    right: 10px;
+    bottom: 7px;
+    left: 10px;
+
+    height: 1px;
+    content: '';
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgb(104 65 18 / 18%), transparent);
+  }
+
+  > p {
+    margin: 7px 42px 0 0;
+
+    color: color-mix(in srgb, var(--task-ink) 72%, transparent);
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.45;
+  }
+}
+
+.taskHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  h3 {
+    margin: 0;
+
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+}
+
+.taskActions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.completeButton {
+  display: grid;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  place-items: center;
+
+  color: #5c3a10;
+
+  background-color: rgb(231 204 151 / 68%);
+  border: 1px solid rgb(104 64 17 / 43%);
+  border-radius: 4px 7px 5px 3px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #e7c787;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #704615;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.taskMenu {
+  position: relative;
+}
+
+.taskMenuButton {
+  display: grid;
+  width: 20px;
+  height: 24px;
+  margin-top: -5px;
+  margin-right: -5px;
+  padding: 0;
+  place-items: center;
+
+  color: #744520;
+
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease;
+
+  &:hover {
+    background-color: rgb(255 255 255 / 24%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #704615;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+.task:hover .taskMenuButton,
+.task:focus-within .taskMenuButton {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.taskMenuPopover {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: -5px;
+  z-index: 10;
+
+  min-width: 126px;
+  padding: 5px;
+
+  background-color: #edcf96;
+  border: 1px solid rgb(104 64 17 / 45%);
+  border-radius: 4px 7px 5px 3px;
+  box-shadow: 0 7px 16px rgb(52 28 5 / 24%);
+}
+
+.deleteTaskAction {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  padding: 7px 8px;
+
+  color: #6e251a;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  text-align: left;
+
+  background-color: transparent;
+  border: 0;
+  border-radius: 3px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgb(150 55 37 / 12%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #8a3a2b;
+    outline-offset: -1px;
+  }
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (hover: none) {
+  .taskMenuButton {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.completedTask {
+  color: #43502d;
+  background: linear-gradient(135deg, #d7d29e, #bbb87a);
+  border-color: rgb(109 115 65 / 65%);
+
+  h3 {
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+
+  > p {
+    color: rgb(67 80 45 / 68%);
+  }
+
+  .completeButton {
+    color: #f3efd4;
+    background-color: #697548;
+    border-color: #59643a;
+  }
+}

@@ -1,15 +1,9 @@
+import { TaskCard, type Task } from '@/features/TaskBoard';
 import { Modal } from '@/shared';
 import clsx from 'clsx';
-import { Check, Kanban, Moon, Plus } from 'lucide-react';
+import { Kanban, Moon, Plus } from 'lucide-react';
 import React from 'react';
 import s from './TaskBoardPage.module.css';
-
-type Task = {
-  id: number;
-  title: string;
-  description: string;
-  completed: boolean;
-};
 
 const ACTIVE_DAY_STORAGE_KEY = 'taskBoardActiveDay';
 const DAY_CHECK_INTERVAL = 60000;
@@ -134,6 +128,10 @@ export const TaskBoardPage = () => {
     );
   };
 
+  const handleDeleteTask = (taskId: number) => {
+    setTasks((currentTasks) => currentTasks.filter((task) => task.id !== taskId));
+  };
+
   const handleStartNewDay = () => {
     setTasks((currentTasks) =>
       currentTasks.map((task) => ({
@@ -231,28 +229,12 @@ export const TaskBoardPage = () => {
                 )}
                 {columnTasks.length > 0 ? (
                   columnTasks.map((task) => (
-                    <div
-                      className={clsx(s.task, { [s.completedTask]: task.completed })}
+                    <TaskCard
                       key={task.id}
-                    >
-                      <div className={s.taskHeader}>
-                        <h3>{task.title}</h3>
-                        <button
-                          type="button"
-                          className={s.completeButton}
-                          onClick={() => handleToggleTask(task.id)}
-                          aria-label={
-                            task.completed
-                              ? `Mark ${task.title} as active`
-                              : `Complete ${task.title}`
-                          }
-                          title={task.completed ? 'Mark as active' : 'Complete task'}
-                        >
-                          {task.completed && <Check aria-hidden="true" />}
-                        </button>
-                      </div>
-                      <p>{task.description}</p>
-                    </div>
+                      task={task}
+                      onToggle={handleToggleTask}
+                      onDelete={handleDeleteTask}
+                    />
                   ))
                 ) : (
                   <div className={s.placeholder}>
@@ -284,22 +266,12 @@ export const TaskBoardPage = () => {
 
           <div className={s.summaryTasks}>
             {tasks.map((task) => (
-              <div className={clsx(s.task, { [s.completedTask]: task.completed })} key={task.id}>
-                <div className={s.taskHeader}>
-                  <h3>{task.title}</h3>
-                  <button
-                    type="button"
-                    className={s.completeButton}
-                    onClick={() => handleToggleTask(task.id)}
-                    aria-label={
-                      task.completed ? `Mark ${task.title} as active` : `Complete ${task.title}`
-                    }
-                  >
-                    {task.completed && <Check aria-hidden="true" />}
-                  </button>
-                </div>
-                {task.description && <p>{task.description}</p>}
-              </div>
+              <TaskCard
+                key={task.id}
+                task={task}
+                onToggle={handleToggleTask}
+                onDelete={handleDeleteTask}
+              />
             ))}
           </div>
 
