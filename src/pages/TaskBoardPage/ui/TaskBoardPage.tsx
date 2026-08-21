@@ -1,4 +1,4 @@
-import { TaskCard, type Task } from '@/features/TaskBoard';
+import { TaskCard, TaskEditModal, type Task } from '@/features/TaskBoard';
 import { Modal } from '@/shared';
 import clsx from 'clsx';
 import { Kanban, Moon, Plus } from 'lucide-react';
@@ -62,6 +62,7 @@ export const TaskBoardPage = () => {
   const [tasks, setTasks] = React.useState(todayTasks);
   const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false);
   const [isDaySummaryOpen, setIsDaySummaryOpen] = React.useState(false);
+  const [editingTaskId, setEditingTaskId] = React.useState<number | null>(null);
   const [activeDay, setActiveDay] = React.useState(
     () => localStorage.getItem(ACTIVE_DAY_STORAGE_KEY) ?? getLocalDayKey(),
   );
@@ -130,6 +131,19 @@ export const TaskBoardPage = () => {
 
   const handleDeleteTask = (taskId: number) => {
     setTasks((currentTasks) => currentTasks.filter((task) => task.id !== taskId));
+    setEditingTaskId((currentId) => (currentId === taskId ? null : currentId));
+  };
+
+  const handleEditTask = (taskId: number) => {
+    setIsDaySummaryOpen(false);
+    setEditingTaskId(taskId);
+  };
+
+  const handleSaveTask = (taskId: number, patch: Pick<Task, 'title' | 'description'>) => {
+    setTasks((currentTasks) =>
+      currentTasks.map((task) => (task.id === taskId ? { ...task, ...patch } : task)),
+    );
+    setEditingTaskId(null);
   };
 
   const handleStartNewDay = () => {
@@ -144,6 +158,7 @@ export const TaskBoardPage = () => {
   };
 
   const completedTasksCount = tasks.filter((task) => task.completed).length;
+  const editingTask = tasks.find((task) => task.id === editingTaskId) ?? null;
 
   return (
     <section className={s.root}>
@@ -233,6 +248,7 @@ export const TaskBoardPage = () => {
                       key={task.id}
                       task={task}
                       onToggle={handleToggleTask}
+                      onEdit={handleEditTask}
                       onDelete={handleDeleteTask}
                     />
                   ))
@@ -271,6 +287,7 @@ export const TaskBoardPage = () => {
                 task={task}
                 onToggle={handleToggleTask}
                 onDelete={handleDeleteTask}
+                showMenu={false}
               />
             ))}
           </div>
@@ -280,6 +297,14 @@ export const TaskBoardPage = () => {
           </button>
         </section>
       </Modal>
+
+      {editingTask && (
+        <TaskEditModal
+          task={editingTask}
+          onClose={() => setEditingTaskId(null)}
+          onSave={handleSaveTask}
+        />
+      )}
     </section>
   );
 };

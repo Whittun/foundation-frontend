@@ -37,6 +37,10 @@
   }
 }
 
+.editableTask {
+  cursor: pointer;
+}
+
 .taskHeader {
   display: flex;
   align-items: flex-start;
@@ -149,6 +153,7 @@
   box-shadow: 0 7px 16px rgb(52 28 5 / 24%);
 }
 
+.editTaskAction,
 .deleteTaskAction {
   display: flex;
   align-items: center;
@@ -156,7 +161,6 @@
   gap: 8px;
   padding: 7px 8px;
 
-  color: #6e251a;
   font: inherit;
   font-size: 13px;
   font-weight: 750;
@@ -180,6 +184,18 @@
     width: 15px;
     height: 15px;
   }
+}
+
+.editTaskAction {
+  color: #4f3516;
+
+  &:hover {
+    background-color: rgb(255 255 255 / 22%);
+  }
+}
+
+.deleteTaskAction {
+  color: #6e251a;
 }
 
 @media (hover: none) {

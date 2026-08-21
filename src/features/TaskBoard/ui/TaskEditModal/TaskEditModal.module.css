@@ -1,0 +1,130 @@
+.form {
+  position: relative;
+  z-index: 1;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+
+  > svg {
+    width: 30px;
+    height: 30px;
+    color: #694414;
+    stroke-width: 1.7;
+  }
+
+  span {
+    font-size: 11px;
+    font-weight: 850;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.65;
+  }
+
+  h2 {
+    margin: 2px 0 0;
+    font-size: 22px;
+  }
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  label > span {
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 10px 11px;
+
+    color: inherit;
+    font: inherit;
+
+    background-color: rgb(255 247 226 / 55%);
+    border: 1px solid color-mix(in srgb, var(--note-edge) 32%, transparent);
+    border-radius: 4px;
+    outline: none;
+
+    &:focus {
+      border-color: #704615;
+      box-shadow: 0 0 0 2px rgb(112 70 21 / 15%);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.cancelButton,
+.saveButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 8px 12px;
+
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+
+  border-radius: 4px 7px 5px 3px;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid #704615;
+    outline-offset: 2px;
+  }
+}
+
+.cancelButton {
+  color: inherit;
+  background-color: rgb(255 255 255 / 14%);
+  border: 1px solid color-mix(in srgb, var(--note-edge) 35%, transparent);
+
+  &:hover {
+    background-color: rgb(255 255 255 / 28%);
+  }
+}
+
+.saveButton {
+  color: color-mix(in srgb, var(--note-paper) 88%, white);
+  background-color: var(--accent-theme-color);
+  border: 1px solid rgb(255 255 255 / 8%);
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.08);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
