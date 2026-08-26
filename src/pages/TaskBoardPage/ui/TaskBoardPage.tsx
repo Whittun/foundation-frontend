@@ -1,5 +1,6 @@
 import { TaskCard, TaskEditModal, type Task } from '@/features/TaskBoard';
-import { Modal } from '@/shared';
+import { isTaskScheduledForDate } from '@/features/TaskBoard/model/isTaskScheduledForDate';
+import { getLocalDayKey, Modal } from '@/shared';
 import clsx from 'clsx';
 import { Kanban, Moon, Plus } from 'lucide-react';
 import React from 'react';
@@ -8,34 +9,44 @@ import s from './TaskBoardPage.module.css';
 const ACTIVE_DAY_STORAGE_KEY = 'taskBoardActiveDay';
 const DAY_CHECK_INTERVAL = 60000;
 
-const getLocalDayKey = (date = new Date()) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-};
-
-const todayTasks: Task[] = [
+const dailyTasks: Task[] = [
   {
     id: 1,
     title: 'Review priorities',
     description: 'Choose the three most important things to focus on today.',
     completed: false,
+    startDate: getLocalDayKey(),
+    schedule: {
+      type: 'weekly',
+      every: 1,
+      days: [1, 2, 3, 4, 5],
+    },
   },
   {
     id: 2,
     title: 'Finish board UI',
     description: 'Polish the task cards and check how they behave in the Today column.',
     completed: false,
+    startDate: '2026-08-22',
+    schedule: {
+      type: 'daily',
+      every: 1,
+    },
   },
   {
     id: 3,
     title: 'Plan tomorrow',
     description: 'Write down the first task for tomorrow before finishing the day.',
     completed: false,
+    startDate: '2026-08-22',
+    schedule: {
+      type: 'daily',
+      every: 3,
+    },
   },
 ];
+
+const todayTasks = dailyTasks.filter((task) => isTaskScheduledForDate(task, getLocalDayKey()));
 
 const columns = [
   {
@@ -48,7 +59,7 @@ const columns = [
     title: 'Today',
     placeholder: null,
     description: null,
-    tasks: todayTasks,
+    tasks: dailyTasks,
   },
   {
     title: 'Tasks',
@@ -114,6 +125,11 @@ export const TaskBoardPage = () => {
         title: trimmedTitle,
         description: trimmedDescription,
         completed: false,
+        startDate: getLocalDayKey(),
+        schedule: {
+          type: 'daily',
+          every: 1,
+        },
       },
     ]);
     setTitle('');
@@ -139,7 +155,10 @@ export const TaskBoardPage = () => {
     setEditingTaskId(taskId);
   };
 
-  const handleSaveTask = (taskId: number, patch: Pick<Task, 'title' | 'description'>) => {
+  const handleSaveTask = (
+    taskId: number,
+    patch: Pick<Task, 'title' | 'description' | 'startDate' | 'schedule'>,
+  ) => {
     setTasks((currentTasks) =>
       currentTasks.map((task) => (task.id === taskId ? { ...task, ...patch } : task)),
     );
