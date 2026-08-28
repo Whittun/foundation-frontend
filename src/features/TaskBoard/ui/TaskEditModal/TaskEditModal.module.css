@@ -81,6 +81,10 @@
   gap: 12px;
 }
 
+.singleScheduleField {
+  grid-template-columns: 1fr;
+}
+
 .intervalField {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

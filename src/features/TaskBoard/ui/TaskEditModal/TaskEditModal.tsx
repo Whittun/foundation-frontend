@@ -5,7 +5,12 @@ import { Pencil, Save } from 'lucide-react';
 import React from 'react';
 import s from './TaskEditModal.module.css';
 
-type EditableScheduleType = 'daily' | 'weekly';
+type EditableScheduleType = 'daily' | 'weekly' | 'monthly';
+
+const intervalLabels: Record<Exclude<EditableScheduleType, 'monthly'>, string> = {
+  daily: 'day(s)',
+  weekly: 'week(s)',
+};
 
 const weekDays = [
   { label: 'MO', value: 1 },
@@ -30,16 +35,16 @@ export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => 
   const [title, setTitle] = React.useState(task.title);
   const [description, setDescription] = React.useState(task.description);
   const [startDate, setStartDate] = React.useState(task.startDate);
-  const [scheduleType, setScheduleType] = React.useState<EditableScheduleType>(
-    task.schedule.type === 'weekly' ? 'weekly' : 'daily',
+  const [scheduleType, setScheduleType] = React.useState<EditableScheduleType>(task.schedule.type);
+  const [every, setEvery] = React.useState(
+    task.schedule.type === 'monthly' ? 1 : task.schedule.every,
   );
-  const [every, setEvery] = React.useState(task.schedule.every);
   const [selectedDays, setSelectedDays] = React.useState<number[]>(
     task.schedule.type === 'weekly' ? task.schedule.days : [new Date(task.startDate).getUTCDay()],
   );
 
-  const isEveryValid = Number.isInteger(every) && every >= 1;
-  const isScheduleValid = scheduleType === 'daily' || selectedDays.length > 0;
+  const isEveryValid = scheduleType === 'monthly' || (Number.isInteger(every) && every >= 1);
+  const isScheduleValid = scheduleType !== 'weekly' || selectedDays.length > 0;
 
   const handleToggleWeekDay = (day: number) => {
     setSelectedDays((currentDays) =>
@@ -56,10 +61,15 @@ export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => 
 
     if (!trimmedTitle || !startDate || !isEveryValid || !isScheduleValid) return;
 
-    const schedule: Task['schedule'] =
-      scheduleType === 'daily'
-        ? { type: 'daily', every }
-        : { type: 'weekly', every, days: selectedDays };
+    let schedule: Task['schedule'];
+
+    if (scheduleType === 'daily') {
+      schedule = { type: 'daily', every };
+    } else if (scheduleType === 'weekly') {
+      schedule = { type: 'weekly', every, days: selectedDays };
+    } else {
+      schedule = { type: 'monthly' };
+    }
 
     onSave(task.id, {
       title: trimmedTitle,
@@ -110,7 +120,11 @@ export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => 
             />
           </label>
 
-          <div className={s.scheduleFields}>
+          <div
+            className={clsx(s.scheduleFields, {
+              [s.singleScheduleField]: scheduleType === 'monthly',
+            })}
+          >
             <label>
               <span>Schedule type</span>
               <select
@@ -119,23 +133,26 @@ export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => 
               >
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
               </select>
             </label>
 
-            <label>
-              <span>Repeat every</span>
-              <div className={s.intervalField}>
-                <input
-                  type="number"
-                  value={every}
-                  onChange={(event) => setEvery(Number(event.target.value))}
-                  min={1}
-                  step={1}
-                  inputMode="numeric"
-                />
-                <span>{scheduleType === 'daily' ? 'day(s)' : 'week(s)'}</span>
-              </div>
-            </label>
+            {scheduleType !== 'monthly' && (
+              <label>
+                <span>Repeat every</span>
+                <div className={s.intervalField}>
+                  <input
+                    type="number"
+                    value={every}
+                    onChange={(event) => setEvery(Number(event.target.value))}
+                    min={1}
+                    step={1}
+                    inputMode="numeric"
+                  />
+                  <span>{intervalLabels[scheduleType]}</span>
+                </div>
+              </label>
+            )}
           </div>
 
           {scheduleType === 'weekly' && (

@@ -46,5 +46,19 @@ export const isTaskScheduledForDate = (task: Task, targetDate: string): boolean 
     return differenceInWeeks % task.schedule.every === 0;
   }
 
+  if (task.schedule.type === 'monthly') {
+    const start = new Date(task.startDate);
+    const target = new Date(targetDate);
+
+    const startDay = start.getUTCDate();
+    const targetDay = target.getUTCDate();
+
+    if (startDay !== targetDay) {
+      return false;
+    }
+
+    return true;
+  }
+
   return false;
 };

@@ -16,6 +16,5 @@ export type Task = {
       }
     | {
         type: 'monthly';
-        every: number;
       };
 };
