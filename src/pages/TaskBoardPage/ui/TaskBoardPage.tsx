@@ -44,9 +44,19 @@ const dailyTasks: Task[] = [
       every: 3,
     },
   },
+  {
+    id: 4,
+    title: '12 августа среда',
+    description: 'Каждую 2 неделю',
+    completed: false,
+    startDate: '2026-08-12',
+    schedule: {
+      type: 'weekly',
+      every: 2,
+      days: [3, 4],
+    },
+  },
 ];
-
-const todayTasks = dailyTasks.filter((task) => isTaskScheduledForDate(task, getLocalDayKey()));
 
 const columns = [
   {
@@ -70,7 +80,7 @@ const columns = [
 ];
 
 export const TaskBoardPage = () => {
-  const [tasks, setTasks] = React.useState(todayTasks);
+  const [tasks, setTasks] = React.useState(dailyTasks);
   const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false);
   const [isDaySummaryOpen, setIsDaySummaryOpen] = React.useState(false);
   const [editingTaskId, setEditingTaskId] = React.useState<number | null>(null);
@@ -79,6 +89,8 @@ export const TaskBoardPage = () => {
   );
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
+
+  const activeDayTasks = tasks.filter((task) => isTaskScheduledForDate(task, activeDay));
 
   const checkActiveDay = React.useCallback(() => {
     if (activeDay !== getLocalDayKey()) {
@@ -176,7 +188,7 @@ export const TaskBoardPage = () => {
     setIsDaySummaryOpen(false);
   };
 
-  const completedTasksCount = tasks.filter((task) => task.completed).length;
+  const completedTasksCount = activeDayTasks.filter((task) => task.completed).length;
   const editingTask = tasks.find((task) => task.id === editingTaskId) ?? null;
 
   return (
@@ -200,7 +212,7 @@ export const TaskBoardPage = () => {
 
       <div className={s.board} aria-label="Task board columns">
         {columns.map((column) => {
-          const columnTasks = column.title === 'Today' ? tasks : column.tasks;
+          const columnTasks = column.title === 'Today' ? activeDayTasks : column.tasks;
 
           return (
             <section className={s.column} key={column.title}>
@@ -291,7 +303,7 @@ export const TaskBoardPage = () => {
               <h2>Review today’s tasks</h2>
             </div>
             <strong>
-              {completedTasksCount} / {tasks.length}
+              {completedTasksCount} / {activeDayTasks.length}
             </strong>
           </header>
 
@@ -300,7 +312,7 @@ export const TaskBoardPage = () => {
           </p>
 
           <div className={s.summaryTasks}>
-            {tasks.map((task) => (
+            {activeDayTasks.map((task) => (
               <TaskCard
                 key={task.id}
                 task={task}

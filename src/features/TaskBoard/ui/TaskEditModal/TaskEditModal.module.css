@@ -94,6 +94,83 @@
   }
 }
 
+.weekDaysField {
+  padding: 0;
+  margin: 0;
+
+  border: 0;
+
+  legend {
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+}
+
+.weekDays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.weekDayButton {
+  position: relative;
+
+  min-width: 0;
+  height: 32px;
+  padding: 0 2px;
+
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+
+  background-color: rgb(255 247 226 / 38%);
+  border: 1px solid color-mix(in srgb, var(--note-edge) 32%, transparent);
+  border-radius: 0;
+  cursor: pointer;
+
+  & + & {
+    margin-left: -1px;
+  }
+
+  &:first-child {
+    border-radius: 4px 0 0 4px;
+  }
+
+  &:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+
+  &:hover {
+    background-color: rgb(255 247 226 / 65%);
+  }
+
+  &:focus-visible {
+    outline: 2px solid #704615;
+    outline-offset: 2px;
+  }
+}
+
+.selectedWeekDay {
+  z-index: 1;
+
+  color: color-mix(in srgb, var(--note-paper) 88%, white);
+  background-color: var(--accent-theme-color);
+  border-color: rgb(255 255 255 / 8%);
+
+  &:hover {
+    filter: brightness(1.08);
+    background-color: var(--accent-theme-color);
+  }
+}
+
+.scheduleError {
+  margin: 6px 0 0;
+  color: #7a2d20;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;
