@@ -4,83 +4,93 @@ import { getLocalDayKey, Modal } from '@/shared';
 import clsx from 'clsx';
 import { Kanban, Moon, Plus } from 'lucide-react';
 import React from 'react';
+import { useCreateTaskMutation, useEditTaskMutation, useGetTasksQuery } from '../api/tasksApi';
 import s from './TaskBoardPage.module.css';
 
 const ACTIVE_DAY_STORAGE_KEY = 'taskBoardActiveDay';
 const DAY_CHECK_INTERVAL = 60000;
 
-const dailyTasks: Task[] = [
-  {
-    id: 1,
-    title: 'Review priorities',
-    description: 'Choose the three most important things to focus on today.',
-    completed: false,
-    startDate: getLocalDayKey(),
-    schedule: {
-      type: 'weekly',
-      every: 1,
-      days: [1, 2, 3, 4, 5],
-    },
-  },
-  {
-    id: 2,
-    title: 'Finish board UI',
-    description: 'Polish the task cards and check how they behave in the Today column.',
-    completed: false,
-    startDate: '2026-08-22',
-    schedule: {
-      type: 'daily',
-      every: 1,
-    },
-  },
-  {
-    id: 3,
-    title: 'Plan tomorrow',
-    description: 'Write down the first task for tomorrow before finishing the day.',
-    completed: false,
-    startDate: '2026-08-22',
-    schedule: {
-      type: 'daily',
-      every: 3,
-    },
-  },
-  {
-    id: 4,
-    title: '12 августа среда',
-    description: 'Каждую 2 неделю',
-    completed: false,
-    startDate: '2026-08-12',
-    schedule: {
-      type: 'weekly',
-      every: 2,
-      days: [3, 4],
-    },
-  },
-];
+type TaskView = 'today' | 'all';
 
-const columns = [
-  {
-    title: 'Habits',
-    placeholder: 'Coming soon',
-    description: 'Habit cards will appear here.',
-    tasks: [],
-  },
-  {
-    title: 'Today',
-    placeholder: null,
-    description: null,
-    tasks: dailyTasks,
-  },
-  {
-    title: 'Tasks',
-    placeholder: 'In development',
-    description: 'Task backlog is being prepared.',
-    tasks: [],
-  },
-];
+// const dailyTasks: Task[] = [
+//   {
+//     id: 1,
+//     title: 'Review priorities',
+//     description: 'Choose the three most important things to focus on today.',
+//     completed: false,
+//     startDate: getLocalDayKey(),
+//     schedule: {
+//       type: 'weekly',
+//       every: 1,
+//       days: [1, 2, 3, 4, 5],
+//     },
+//   },
+//   {
+//     id: 2,
+//     title: 'Finish board UI',
+//     description: 'Polish the task cards and check how they behave in the Today column.',
+//     completed: false,
+//     startDate: '2026-08-22',
+//     schedule: {
+//       type: 'daily',
+//       every: 1,
+//     },
+//   },
+//   {
+//     id: 3,
+//     title: 'Plan tomorrow',
+//     description: 'Write down the first task for tomorrow before finishing the day.',
+//     completed: false,
+//     startDate: '2026-08-22',
+//     schedule: {
+//       type: 'daily',
+//       every: 3,
+//     },
+//   },
+//   {
+//     id: 4,
+//     title: '12 августа среда',
+//     description: 'Каждую 2 неделю',
+//     completed: false,
+//     startDate: '2026-08-12',
+//     schedule: {
+//       type: 'weekly',
+//       every: 2,
+//       days: [3, 4],
+//     },
+//   },
+// ];
 
 export const TaskBoardPage = () => {
-  const [tasks, setTasks] = React.useState(dailyTasks);
+  const { data = [] } = useGetTasksQuery();
+  const [createTask] = useCreateTaskMutation();
+  const [editTask] = useEditTaskMutation();
+
+  console.log(data);
+
+  const columns = [
+    {
+      title: 'Habits',
+      placeholder: 'Coming soon',
+      description: 'Habit cards will appear here.',
+      tasks: [],
+    },
+    {
+      title: 'Today',
+      placeholder: null,
+      description: null,
+      tasks: data,
+    },
+    {
+      title: 'Tasks',
+      placeholder: 'In development',
+      description: 'Task backlog is being prepared.',
+      tasks: [],
+    },
+  ];
+
+  // const [tasks, setTasks] = React.useState(dailyTasks);
+  const [taskView, setTaskView] = React.useState<TaskView>('today');
   const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false);
   const [isDaySummaryOpen, setIsDaySummaryOpen] = React.useState(false);
   const [editingTaskId, setEditingTaskId] = React.useState<number | null>(null);
@@ -90,7 +100,7 @@ export const TaskBoardPage = () => {
   const [title, setTitle] = React.useState('');
   const [description, setDescription] = React.useState('');
 
-  const activeDayTasks = tasks.filter((task) => isTaskScheduledForDate(task, activeDay));
+  const activeDayTasks = data.filter((task) => isTaskScheduledForDate(task, activeDay));
 
   const checkActiveDay = React.useCallback(() => {
     if (activeDay !== getLocalDayKey()) {
@@ -130,35 +140,31 @@ export const TaskBoardPage = () => {
 
     if (!trimmedTitle) return;
 
-    setTasks((currentTasks) => [
-      ...currentTasks,
-      {
-        id: Date.now(),
-        title: trimmedTitle,
-        description: trimmedDescription,
-        completed: false,
-        startDate: getLocalDayKey(),
-        schedule: {
-          type: 'daily',
-          every: 1,
-        },
+    createTask({
+      title: trimmedTitle,
+      description: trimmedDescription,
+      startDate: getLocalDayKey(),
+      schedule: {
+        type: 'daily',
+        every: 1,
       },
-    ]);
+    });
+
     setTitle('');
     setDescription('');
     setIsCreateFormOpen(false);
   };
 
-  const handleToggleTask = (taskId: number) => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task,
-      ),
-    );
-  };
+  // const handleToggleTask = (taskId: number) => {
+  //   setTasks((currentTasks) =>
+  //     currentTasks.map((task) =>
+  //       task.id === taskId ? { ...task, completed: !task.completed } : task,
+  //     ),
+  //   );
+  // };
 
   const handleDeleteTask = (taskId: number) => {
-    setTasks((currentTasks) => currentTasks.filter((task) => task.id !== taskId));
+    // setTasks((currentTasks) => currentTasks.filter((task) => task.id !== taskId));
     setEditingTaskId((currentId) => (currentId === taskId ? null : currentId));
   };
 
@@ -171,25 +177,27 @@ export const TaskBoardPage = () => {
     taskId: number,
     patch: Pick<Task, 'title' | 'description' | 'startDate' | 'schedule'>,
   ) => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) => (task.id === taskId ? { ...task, ...patch } : task)),
-    );
+    editTask({
+      id: taskId,
+      task: patch,
+    });
+
     setEditingTaskId(null);
   };
 
   const handleStartNewDay = () => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) => ({
-        ...task,
-        completed: false,
-      })),
-    );
+    // setTasks((currentTasks) =>
+    //   currentTasks.map((task) => ({
+    //     ...task,
+    //     completed: false,
+    //   })),
+    // );
     setActiveDay(getLocalDayKey());
     setIsDaySummaryOpen(false);
   };
 
-  const completedTasksCount = activeDayTasks.filter((task) => task.completed).length;
-  const editingTask = tasks.find((task) => task.id === editingTaskId) ?? null;
+  // const completedTasksCount = activeDayTasks.filter((task) => task.completed).length;
+  const editingTask = data.find((task) => task.id === editingTaskId) ?? null;
 
   return (
     <section className={s.root}>
@@ -212,33 +220,52 @@ export const TaskBoardPage = () => {
 
       <div className={s.board} aria-label="Task board columns">
         {columns.map((column) => {
-          const columnTasks = column.title === 'Today' ? activeDayTasks : column.tasks;
-
+          console.log(column);
+          const isTaskColumn = column.title === 'Today';
+          const columnTasks = isTaskColumn && taskView !== 'all' ? activeDayTasks : column.tasks;
+          const columnTitle = isTaskColumn && taskView === 'all' ? 'All tasks' : column.title;
+          console.log(taskView, 'test');
           return (
             <section className={s.column} key={column.title}>
               <header className={s.columnHeader}>
-                <h2 className={s.columnTitle}>{column.title}</h2>
+                <h2 className={s.columnTitle}>{columnTitle}</h2>
                 <div className={s.columnActions}>
-                  {column.title === 'Today' && (
-                    <button
-                      type="button"
-                      className={clsx(s.openCreateFormButton, {
-                        [s.openCreateFormButtonActive]: isCreateFormOpen,
-                      })}
-                      onClick={() => setIsCreateFormOpen((isOpen) => !isOpen)}
-                      aria-label={isCreateFormOpen ? 'Close task form' : 'Create task'}
-                      aria-expanded={isCreateFormOpen}
-                      aria-controls="create-task-form"
-                      title={isCreateFormOpen ? 'Close task form' : 'Create task'}
-                    >
-                      <Plus aria-hidden="true" />
-                    </button>
+                  {isTaskColumn && (
+                    <>
+                      <div className={s.taskViewSwitch} aria-label="Task view">
+                        {(['today', 'all'] as const).map((view) => (
+                          <button
+                            type="button"
+                            className={clsx({ [s.activeTaskView]: taskView === view })}
+                            onClick={() => setTaskView(view)}
+                            aria-pressed={taskView === view}
+                            key={view}
+                          >
+                            {view === 'today' ? 'Today' : 'All'}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button
+                        type="button"
+                        className={clsx(s.openCreateFormButton, {
+                          [s.openCreateFormButtonActive]: isCreateFormOpen,
+                        })}
+                        onClick={() => setIsCreateFormOpen((isOpen) => !isOpen)}
+                        aria-label={isCreateFormOpen ? 'Close task form' : 'Create task'}
+                        aria-expanded={isCreateFormOpen}
+                        aria-controls="create-task-form"
+                        title={isCreateFormOpen ? 'Close task form' : 'Create task'}
+                      >
+                        <Plus aria-hidden="true" />
+                      </button>
+                    </>
                   )}
-                  <span className={s.count}>{columnTasks.length}</span>
+                  {/* <span className={s.count}>{columnTasks.length}</span> */}
                 </div>
               </header>
               <div className={s.tasks}>
-                {column.title === 'Today' && isCreateFormOpen && (
+                {isTaskColumn && isCreateFormOpen && (
                   <form
                     id="create-task-form"
                     className={s.createTaskForm}
@@ -278,7 +305,7 @@ export const TaskBoardPage = () => {
                     <TaskCard
                       key={task.id}
                       task={task}
-                      onToggle={handleToggleTask}
+                      // onToggle={handleToggleTask}
                       onEdit={handleEditTask}
                       onDelete={handleDeleteTask}
                     />
@@ -302,9 +329,7 @@ export const TaskBoardPage = () => {
               <span>Day summary</span>
               <h2>Review today’s tasks</h2>
             </div>
-            <strong>
-              {completedTasksCount} / {activeDayTasks.length}
-            </strong>
+            <strong>{/* {completedTasksCount} / {activeDayTasks.length} */}</strong>
           </header>
 
           <p className={s.daySummaryHint}>
@@ -316,7 +341,7 @@ export const TaskBoardPage = () => {
               <TaskCard
                 key={task.id}
                 task={task}
-                onToggle={handleToggleTask}
+                // onToggle={handleToggleTask}
                 onDelete={handleDeleteTask}
                 showMenu={false}
               />

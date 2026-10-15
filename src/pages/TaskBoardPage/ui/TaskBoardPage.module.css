@@ -151,6 +151,55 @@
   gap: 8px;
 }
 
+.taskViewSwitch {
+  display: inline-grid;
+  grid-template-columns: repeat(2, auto);
+
+  border: 1px solid color-mix(in srgb, var(--task-paper-edge) 38%, transparent);
+  border-radius: 4px;
+  overflow: hidden;
+
+  button {
+    min-width: 42px;
+    height: 28px;
+    padding: 0 8px;
+
+    color: var(--task-ink);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 800;
+
+    background-color: rgb(255 255 255 / 15%);
+    border: 0;
+    cursor: pointer;
+
+    & + button {
+      border-left: 1px solid color-mix(in srgb, var(--task-paper-edge) 38%, transparent);
+    }
+
+    &:hover {
+      background-color: rgb(255 255 255 / 28%);
+    }
+
+    &:focus-visible {
+      position: relative;
+      z-index: 1;
+      outline: 2px solid #704615;
+      outline-offset: -2px;
+    }
+  }
+
+  .activeTaskView {
+    color: color-mix(in srgb, var(--task-paper) 88%, white);
+    background-color: var(--accent-theme-color);
+
+    &:hover {
+      background-color: var(--accent-theme-color);
+      filter: brightness(1.08);
+    }
+  }
+}
+
 .openCreateFormButton {
   display: grid;
   width: 28px;
