@@ -2,8 +2,6 @@
 
 The main idea behind Foundation is to help people see their life path and support them in moving toward their objectives.
 
-<img width="1672" height="941" alt="53d452f0-6a0f-48fc-95d4-3317a4be92d8" src="https://github.com/user-attachments/assets/768a9dd4-f7b0-47eb-9a8a-8f7c88a42d1a" />
-
 ## What is Foundation?
 
 Foundation is a project I’m building based on my own life path, experience, and observations.
