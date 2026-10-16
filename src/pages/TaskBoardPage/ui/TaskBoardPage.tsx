@@ -141,6 +141,10 @@ export const TaskBoardPage = () => {
   const handleStartNewDay = () => {
     setActiveDay(getLocalDayKey());
     setIsDaySummaryOpen(false);
+
+    data.forEach((task) => {
+      editTask({ id: task.id, task: { completedDate: null } });
+    });
   };
 
   const editingTask = data.find((task) => task.id === editingTaskId) ?? null;
@@ -169,7 +173,7 @@ export const TaskBoardPage = () => {
           console.log(column);
           const isTaskColumn = column.title === 'Today';
           const columnTasks = isTaskColumn && taskView !== 'all' ? activeDayTasks : column.tasks;
-          const columnTitle = isTaskColumn && taskView === 'all' ? 'All tasks' : column.title;
+          const columnTitle = isTaskColumn && taskView === 'all' ? 'All scheduled' : column.title;
           console.log(taskView, 'test');
           return (
             <section className={s.column} key={column.title}>
