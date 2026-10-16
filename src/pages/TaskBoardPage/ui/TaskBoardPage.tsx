@@ -4,7 +4,12 @@ import { getLocalDayKey, Modal } from '@/shared';
 import clsx from 'clsx';
 import { Kanban, Moon, Plus } from 'lucide-react';
 import React from 'react';
-import { useCreateTaskMutation, useEditTaskMutation, useGetTasksQuery } from '../api/tasksApi';
+import {
+  useCreateTaskMutation,
+  useEditTaskMutation,
+  useGetTasksQuery,
+  useRemoveTaskMutation,
+} from '../api/tasksApi';
 import s from './TaskBoardPage.module.css';
 
 const ACTIVE_DAY_STORAGE_KEY = 'taskBoardActiveDay';
@@ -12,59 +17,11 @@ const DAY_CHECK_INTERVAL = 60000;
 
 type TaskView = 'today' | 'all';
 
-// const dailyTasks: Task[] = [
-//   {
-//     id: 1,
-//     title: 'Review priorities',
-//     description: 'Choose the three most important things to focus on today.',
-//     completed: false,
-//     startDate: getLocalDayKey(),
-//     schedule: {
-//       type: 'weekly',
-//       every: 1,
-//       days: [1, 2, 3, 4, 5],
-//     },
-//   },
-//   {
-//     id: 2,
-//     title: 'Finish board UI',
-//     description: 'Polish the task cards and check how they behave in the Today column.',
-//     completed: false,
-//     startDate: '2026-08-22',
-//     schedule: {
-//       type: 'daily',
-//       every: 1,
-//     },
-//   },
-//   {
-//     id: 3,
-//     title: 'Plan tomorrow',
-//     description: 'Write down the first task for tomorrow before finishing the day.',
-//     completed: false,
-//     startDate: '2026-08-22',
-//     schedule: {
-//       type: 'daily',
-//       every: 3,
-//     },
-//   },
-//   {
-//     id: 4,
-//     title: '12 августа среда',
-//     description: 'Каждую 2 неделю',
-//     completed: false,
-//     startDate: '2026-08-12',
-//     schedule: {
-//       type: 'weekly',
-//       every: 2,
-//       days: [3, 4],
-//     },
-//   },
-// ];
-
 export const TaskBoardPage = () => {
   const { data = [] } = useGetTasksQuery();
   const [createTask] = useCreateTaskMutation();
   const [editTask] = useEditTaskMutation();
+  const [removeTask] = useRemoveTaskMutation();
 
   console.log(data);
 
@@ -89,7 +46,6 @@ export const TaskBoardPage = () => {
     },
   ];
 
-  // const [tasks, setTasks] = React.useState(dailyTasks);
   const [taskView, setTaskView] = React.useState<TaskView>('today');
   const [isCreateFormOpen, setIsCreateFormOpen] = React.useState(false);
   const [isDaySummaryOpen, setIsDaySummaryOpen] = React.useState(false);
@@ -155,17 +111,14 @@ export const TaskBoardPage = () => {
     setIsCreateFormOpen(false);
   };
 
-  // const handleToggleTask = (taskId: number) => {
-  //   setTasks((currentTasks) =>
-  //     currentTasks.map((task) =>
-  //       task.id === taskId ? { ...task, completed: !task.completed } : task,
-  //     ),
-  //   );
-  // };
+  const handleToggleTask = (taskId: number, isCompleted: boolean) => {
+    editTask({ id: taskId, task: { completedDate: isCompleted ? null : getLocalDayKey() } });
+  };
 
   const handleDeleteTask = (taskId: number) => {
-    // setTasks((currentTasks) => currentTasks.filter((task) => task.id !== taskId));
     setEditingTaskId((currentId) => (currentId === taskId ? null : currentId));
+
+    removeTask({ id: taskId });
   };
 
   const handleEditTask = (taskId: number) => {
@@ -186,17 +139,10 @@ export const TaskBoardPage = () => {
   };
 
   const handleStartNewDay = () => {
-    // setTasks((currentTasks) =>
-    //   currentTasks.map((task) => ({
-    //     ...task,
-    //     completed: false,
-    //   })),
-    // );
     setActiveDay(getLocalDayKey());
     setIsDaySummaryOpen(false);
   };
 
-  // const completedTasksCount = activeDayTasks.filter((task) => task.completed).length;
   const editingTask = data.find((task) => task.id === editingTaskId) ?? null;
 
   return (
@@ -305,7 +251,7 @@ export const TaskBoardPage = () => {
                     <TaskCard
                       key={task.id}
                       task={task}
-                      // onToggle={handleToggleTask}
+                      onToggle={handleToggleTask}
                       onEdit={handleEditTask}
                       onDelete={handleDeleteTask}
                     />
@@ -341,7 +287,7 @@ export const TaskBoardPage = () => {
               <TaskCard
                 key={task.id}
                 task={task}
-                // onToggle={handleToggleTask}
+                onToggle={handleToggleTask}
                 onDelete={handleDeleteTask}
                 showMenu={false}
               />

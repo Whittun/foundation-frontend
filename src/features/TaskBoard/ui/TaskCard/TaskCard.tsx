@@ -6,7 +6,7 @@ import s from './TaskCard.module.css';
 
 type TaskCardProps = {
   task: Task;
-  onToggle: (taskId: number) => void;
+  onToggle: (taskId: number, onCompleted: boolean) => void;
   onEdit?: (taskId: number) => void;
   onDelete: (taskId: number) => void;
   showMenu?: boolean;
@@ -50,7 +50,7 @@ export const TaskCard = ({ task, onToggle, onEdit, onDelete, showMenu = true }: 
   return (
     <div
       className={clsx(s.task, {
-        [s.completedTask]: task.completed,
+        [s.completedTask]: task.completedDate,
         [s.editableTask]: Boolean(onEdit),
       })}
       onClick={handleEdit}
@@ -63,12 +63,14 @@ export const TaskCard = ({ task, onToggle, onEdit, onDelete, showMenu = true }: 
             className={s.completeButton}
             onClick={(event) => {
               event.stopPropagation();
-              onToggle(task.id);
+              onToggle(task.id, task.completedDate !== null);
             }}
-            aria-label={task.completed ? `Mark ${task.title} as active` : `Complete ${task.title}`}
-            title={task.completed ? 'Mark as active' : 'Complete task'}
+            aria-label={
+              task.completedDate ? `Mark ${task.title} as active` : `Complete ${task.title}`
+            }
+            title={task.completedDate ? 'Mark as active' : 'Complete task'}
           >
-            {task.completed && <Check aria-hidden="true" />}
+            {task.completedDate && <Check aria-hidden="true" />}
           </button>
 
           {showMenu && (
