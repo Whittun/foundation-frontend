@@ -10,11 +10,20 @@ type TaskCardProps = {
   onEdit?: (taskId: number) => void;
   onDelete: (taskId: number) => void;
   showMenu?: boolean;
+  activeDay: string;
 };
 
-export const TaskCard = ({ task, onToggle, onEdit, onDelete, showMenu = true }: TaskCardProps) => {
+export const TaskCard = ({
+  task,
+  onToggle,
+  activeDay,
+  onEdit,
+  onDelete,
+  showMenu = true,
+}: TaskCardProps) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const menuRef = React.useRef<HTMLDivElement>(null);
+  const isCompleted = activeDay === task.completedDate;
 
   React.useEffect(() => {
     if (!isMenuOpen) return;
@@ -50,7 +59,7 @@ export const TaskCard = ({ task, onToggle, onEdit, onDelete, showMenu = true }: 
   return (
     <div
       className={clsx(s.task, {
-        [s.completedTask]: task.completedDate,
+        [s.completedTask]: isCompleted,
         [s.editableTask]: Boolean(onEdit),
       })}
       onClick={handleEdit}
@@ -63,14 +72,12 @@ export const TaskCard = ({ task, onToggle, onEdit, onDelete, showMenu = true }: 
             className={s.completeButton}
             onClick={(event) => {
               event.stopPropagation();
-              onToggle(task.id, task.completedDate !== null);
+              onToggle(task.id, isCompleted);
             }}
-            aria-label={
-              task.completedDate ? `Mark ${task.title} as active` : `Complete ${task.title}`
-            }
-            title={task.completedDate ? 'Mark as active' : 'Complete task'}
+            aria-label={isCompleted ? `Mark ${task.title} as active` : `Complete ${task.title}`}
+            title={isCompleted ? 'Mark as active' : 'Complete task'}
           >
-            {task.completedDate && <Check aria-hidden="true" />}
+            {isCompleted && <Check aria-hidden="true" />}
           </button>
 
           {showMenu && (

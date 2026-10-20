@@ -18,12 +18,10 @@ const DAY_CHECK_INTERVAL = 60000;
 type TaskView = 'today' | 'all';
 
 export const TaskBoardPage = () => {
-  const { data = [] } = useGetTasksQuery();
+  const { data = [], error, isLoading, isFetching } = useGetTasksQuery();
   const [createTask] = useCreateTaskMutation();
   const [editTask] = useEditTaskMutation();
   const [removeTask] = useRemoveTaskMutation();
-
-  console.log(data);
 
   const columns = [
     {
@@ -88,7 +86,7 @@ export const TaskBoardPage = () => {
     };
   }, [checkActiveDay]);
 
-  const handleCreateTask = (event: React.SubmitEvent<HTMLFormElement>) => {
+  const handleCreateTask = async (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const trimmedTitle = title.trim();
@@ -96,29 +94,44 @@ export const TaskBoardPage = () => {
 
     if (!trimmedTitle) return;
 
-    createTask({
-      title: trimmedTitle,
-      description: trimmedDescription,
-      startDate: getLocalDayKey(),
-      schedule: {
-        type: 'daily',
-        every: 1,
-      },
-    });
+    try {
+      await createTask({
+        title: trimmedTitle,
+        description: trimmedDescription,
+        startDate: activeDay,
+        schedule: {
+          type: 'daily',
+          every: 1,
+        },
+      }).unwrap();
 
-    setTitle('');
-    setDescription('');
-    setIsCreateFormOpen(false);
+      setTitle('');
+      setDescription('');
+      setIsCreateFormOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleToggleTask = (taskId: number, isCompleted: boolean) => {
-    editTask({ id: taskId, task: { completedDate: isCompleted ? null : getLocalDayKey() } });
+  const handleToggleTask = async (taskId: number, isCompleted: boolean) => {
+    try {
+      await editTask({
+        id: taskId,
+        task: { completedDate: isCompleted ? null : activeDay },
+      }).unwrap();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const handleDeleteTask = (taskId: number) => {
-    setEditingTaskId((currentId) => (currentId === taskId ? null : currentId));
+  const handleDeleteTask = async (taskId: number) => {
+    try {
+      await removeTask({ id: taskId }).unwrap();
 
-    removeTask({ id: taskId });
+      setEditingTaskId((currentId) => (currentId === taskId ? null : currentId));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleEditTask = (taskId: number) => {
@@ -126,25 +139,25 @@ export const TaskBoardPage = () => {
     setEditingTaskId(taskId);
   };
 
-  const handleSaveTask = (
+  const handleSaveTask = async (
     taskId: number,
     patch: Pick<Task, 'title' | 'description' | 'startDate' | 'schedule'>,
   ) => {
-    editTask({
-      id: taskId,
-      task: patch,
-    });
+    try {
+      await editTask({
+        id: taskId,
+        task: patch,
+      }).unwrap();
 
-    setEditingTaskId(null);
+      setEditingTaskId(null);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleStartNewDay = () => {
     setActiveDay(getLocalDayKey());
     setIsDaySummaryOpen(false);
-
-    data.forEach((task) => {
-      editTask({ id: task.id, task: { completedDate: null } });
-    });
   };
 
   const editingTask = data.find((task) => task.id === editingTaskId) ?? null;
@@ -170,11 +183,9 @@ export const TaskBoardPage = () => {
 
       <div className={s.board} aria-label="Task board columns">
         {columns.map((column) => {
-          console.log(column);
           const isTaskColumn = column.title === 'Today';
           const columnTasks = isTaskColumn && taskView !== 'all' ? activeDayTasks : column.tasks;
           const columnTitle = isTaskColumn && taskView === 'all' ? 'All scheduled' : column.title;
-          console.log(taskView, 'test');
           return (
             <section className={s.column} key={column.title}>
               <header className={s.columnHeader}>
@@ -250,11 +261,16 @@ export const TaskBoardPage = () => {
                     </button>
                   </form>
                 )}
-                {columnTasks.length > 0 ? (
+                {isTaskColumn && isLoading ? (
+                  <p>Loading tasks...</p>
+                ) : isTaskColumn && error ? (
+                  <p>Failed to load tasks.</p>
+                ) : columnTasks.length > 0 ? (
                   columnTasks.map((task) => (
                     <TaskCard
                       key={task.id}
                       task={task}
+                      activeDay={activeDay}
                       onToggle={handleToggleTask}
                       onEdit={handleEditTask}
                       onDelete={handleDeleteTask}
@@ -279,7 +295,7 @@ export const TaskBoardPage = () => {
               <span>Day summary</span>
               <h2>Review today’s tasks</h2>
             </div>
-            <strong>{/* {completedTasksCount} / {activeDayTasks.length} */}</strong>
+            <strong>{/* {completedTasksCount} / {activeDayTasks.length}{' '} */}</strong>
           </header>
 
           <p className={s.daySummaryHint}>
@@ -291,6 +307,7 @@ export const TaskBoardPage = () => {
               <TaskCard
                 key={task.id}
                 task={task}
+                activeDay={activeDay}
                 onToggle={handleToggleTask}
                 onDelete={handleDeleteTask}
                 showMenu={false}

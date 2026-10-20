@@ -68,7 +68,7 @@ export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => 
     } else if (scheduleType === 'weekly') {
       schedule = { type: 'weekly', every, days: selectedDays };
     } else {
-      schedule = { type: 'monthly' };
+      schedule = { type: 'monthly', every };
     }
 
     onSave(task.id, {
