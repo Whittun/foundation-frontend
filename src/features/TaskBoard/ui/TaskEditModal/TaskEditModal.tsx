@@ -3,6 +3,7 @@ import { Modal } from '@/shared';
 import clsx from 'clsx';
 import { Pencil, Save } from 'lucide-react';
 import React from 'react';
+import { useEditTaskMutation } from '../../api/tasksApi';
 import s from './TaskEditModal.module.css';
 
 type EditableScheduleType = 'daily' | 'weekly' | 'monthly';
@@ -25,13 +26,9 @@ const weekDays = [
 type TaskEditModalProps = {
   task: Task;
   onClose: () => void;
-  onSave: (
-    taskId: number,
-    patch: Pick<Task, 'title' | 'description' | 'startDate' | 'schedule'>,
-  ) => void;
 };
 
-export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => {
+export const TaskEditModal = ({ task, onClose }: TaskEditModalProps) => {
   const [title, setTitle] = React.useState(task.title);
   const [description, setDescription] = React.useState(task.description);
   const [startDate, setStartDate] = React.useState(task.startDate);
@@ -43,6 +40,8 @@ export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => 
     task.schedule.type === 'weekly' ? task.schedule.days : [new Date(task.startDate).getUTCDay()],
   );
 
+  const [editTask] = useEditTaskMutation();
+
   const isEveryValid = scheduleType === 'monthly' || (Number.isInteger(every) && every >= 1);
   const isScheduleValid = scheduleType !== 'weekly' || selectedDays.length > 0;
 
@@ -52,6 +51,22 @@ export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => 
         ? currentDays.filter((currentDay) => currentDay !== day)
         : [...currentDays, day],
     );
+  };
+
+  const handleSaveTask = async (
+    taskId: number,
+    patch: Pick<Task, 'title' | 'description' | 'startDate' | 'schedule'>,
+  ) => {
+    try {
+      await editTask({
+        id: taskId,
+        task: patch,
+      }).unwrap();
+
+      onClose();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
@@ -71,7 +86,7 @@ export const TaskEditModal = ({ task, onClose, onSave }: TaskEditModalProps) => 
       schedule = { type: 'monthly', every };
     }
 
-    onSave(task.id, {
+    handleSaveTask(task.id, {
       title: trimmedTitle,
       description: description.trim(),
       startDate,
